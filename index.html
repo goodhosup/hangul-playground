@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>한글 놀이터</title>
+</head>
+<body>
+  <div class="topbar">
+    <a class="icon-btn" href="parent.html" aria-label="부모방">⚙️</a>
+    <div class="title">한글 놀이터</div>
+    <a class="sticker-pill" href="stickers.html" aria-label="스티커판">🏅 <span data-sticker-count>0</span></a>
+  </div>
+
+  <main>
+    <div class="hello" id="hello">안녕! 오늘은 뭐 하고 놀까?</div>
+
+    <div class="section-title">🌱 1단계 · 그림 글자</div>
+    <div class="units" id="units"></div>
+
+    <div class="section-title">🗺️ 놀이터 지도</div>
+    <div class="islands" id="islands"></div>
+  </main>
+
+  <div class="footer">하루 10분, 엄마·아빠와 함께 놀아요</div>
+
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    const STAGES = [
+      { n: 0, name: '말소리 놀이', icon: '👂', color: 'var(--s0)' },
+      { n: 1, name: '그림 글자',   icon: '🍎', color: 'var(--s1)' },
+      { n: 2, name: '모음 친구',   icon: 'ㅏ', color: 'var(--s2)' },
+      { n: 3, name: '자음 친구',   icon: 'ㄱ', color: 'var(--s3)' },
+      { n: 4, name: '글자 블록',   icon: '가', color: 'var(--s4)' },
+      { n: 5, name: '받침 글자',   icon: '공', color: 'var(--s5)' },
+      { n: 6, name: '짧은 문장',   icon: '📖', color: 'var(--s6)' }
+    ];
+    // 지금 만들어진 단계 (나머지는 다음 버전에서 열림)
+    const READY = [1];
+
+    (async () => {
+      const p = Progress.get();
+      if (p.childName) {
+        document.getElementById('hello').textContent = '안녕, ' + p.childName + '! 오늘은 뭐 하고 놀까?';
+      }
+
+      const units = await loadJSON('data/units.json');
+      document.getElementById('units').innerHTML = units.map(u => `
+        <div class="unit">
+          <div class="big">${u.icon}</div>
+          <div class="name">${u.title}</div>
+          <div class="acts">
+            <a class="icon-btn" href="cards.html?unit=${u.unit}" aria-label="그림 카드">🃏</a>
+            <a class="icon-btn" href="match.html?unit=${u.unit}" aria-label="짝 맞추기">🎯</a>
+          </div>
+        </div>`).join('');
+
+      document.getElementById('islands').innerHTML = STAGES.map(s => {
+        const open = READY.includes(s.n);
+        return `<div class="island ${open ? '' : 'locked'}" style="background:${s.color}">
+          <div class="big">${open ? s.icon : '🔒'}</div>
+          <div>${s.n}단계</div>
+          <small>${s.name}${open ? '' : ' · 곧 열려요'}</small>
+        </div>`;
+      }).join('');
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>그림 카드</title>
+</head>
+<body>
+  <div class="topbar">
+    <a class="icon-btn" href="index.html" aria-label="처음으로">🏠</a>
+    <div class="title" id="title">그림 카드</div>
+    <a class="sticker-pill" href="stickers.html">🏅 <span data-sticker-count>0</span></a>
+  </div>
+
+  <main class="stage-area">
+    <div class="flip" id="flip">
+      <div class="flip-inner">
+        <div class="face front" id="front">
+          <div class="pic" id="pic"></div>
+          <div class="hint">눌러 볼까?</div>
+        </div>
+        <div class="face back" id="back">
+          <div class="pic small" id="pic2"></div>
+          <div class="word" id="word"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="icon-btn" id="prev" aria-label="이전">◀️</button>
+      <div class="dots" id="dots"></div>
+      <button class="icon-btn" id="next" aria-label="다음">▶️</button>
+    </div>
+  </main>
+
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    let words = [], i = 0, done = new Set(), busy = false;
+    const unit = param('unit') || '1-1';
+    const flip = document.getElementById('flip');
+
+    function show() {
+      const w = words[i];
+      flip.classList.remove('flipped');
+      document.getElementById('pic').textContent = w.emoji;
+      document.getElementById('pic2').textContent = w.emoji;
+      document.getElementById('word').innerHTML = [...w.word].map(c => '<span>' + c + '</span>').join('');
+      document.getElementById('dots').innerHTML = words.map((_, k) =>
+        '<div class="dot ' + (done.has(k) || k === i ? 'on' : '') + '"></div>').join('');
+    }
+
+    // 한 글자씩 강조하며 읽기
+    async function readSlowly() {
+      const spans = document.querySelectorAll('#word span');
+      for (const s of spans) {
+        s.classList.add('on');
+        await Speak.tts(s.textContent, 0.7);
+        s.classList.remove('on');
+      }
+      await Speak.say(words[i]);
+    }
+
+    flip.addEventListener('click', async () => {
+      if (busy) return;
+      busy = true;
+      if (!flip.classList.contains('flipped')) {
+        flip.classList.add('flipped');
+        Progress.markSeen(words[i].id);
+        done.add(i);
+        show(); flip.classList.add('flipped');
+        await Speak.say(words[i]);
+        if (done.size === words.length && Progress.reward('cards-' + unit)) showStickerToast();
+      } else {
+        await readSlowly();
+      }
+      busy = false;
+    });
+
+    function go(d) {
+      i = (i + d + words.length) % words.length;
+      show();
+      Speak.tts('이건 뭘까?');
+    }
+    document.getElementById('prev').onclick = () => go(-1);
+    document.getElementById('next').onclick = () => go(1);
+
+    // 좌우로 밀어서 넘기기
+    let sx = null;
+    flip.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+    flip.addEventListener('touchend', e => {
+      if (sx === null) return;
+      const dx = e.changedTouches[0].clientX - sx;
+      sx = null;
+      if (Math.abs(dx) > 60) { e.preventDefault(); go(dx < 0 ? 1 : -1); }
+    });
+
+    (async () => {
+      const [all, units] = await Promise.all([loadJSON('data/words.json'), loadJSON('data/units.json')]);
+      words = all.filter(w => w.unit === unit);
+      const u = units.find(x => x.unit === unit);
+      if (u) document.getElementById('title').textContent = u.icon + ' ' + u.title;
+      show();
+    })();
+  </script>
+</body>
+</html>

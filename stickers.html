@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>스티커판</title>
+</head>
+<body>
+  <div class="topbar">
+    <a class="icon-btn" href="index.html" aria-label="처음으로">🏠</a>
+    <div class="title">내 스티커판</div>
+    <div class="sticker-pill">🏅 <span data-sticker-count>0</span></div>
+  </div>
+  <main>
+    <div class="hello" id="msg"></div>
+    <div class="board" id="board"></div>
+  </main>
+
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    const STICKERS = ['🦖','🚀','🐯','🚒','🍦','🐳','🚜','🦄','⚽','🐧','🚁','🐻','🍩','🦕','🚓','🐸','🎈','🐙','🚂','🌈'];
+    const n = Progress.get().stickers;
+    // 판 하나에 10칸, 다 차면 다음 판
+    const boardNo = Math.floor(n / 10);
+    const onBoard = n % 10 === 0 && n > 0 ? 10 : n % 10;
+    const start = n % 10 === 0 && n > 0 ? n - 10 : boardNo * 10;
+    document.getElementById('board').innerHTML = Array.from({ length: 10 }, (_, k) =>
+      k < onBoard
+        ? '<div class="slot filled" style="animation-delay:' + k * 0.08 + 's">' + STICKERS[(start + k) % STICKERS.length] + '</div>'
+        : '<div class="slot"></div>').join('');
+    const left = 10 - onBoard;
+    document.getElementById('msg').textContent =
+      n === 0 ? '놀이를 하면 스티커를 받아요!'
+      : left === 0 ? '스티커판을 다 채웠어! 정말 대단해! 🎉'
+      : '스티커 ' + left + '개만 더 모으면 판이 꽉 차요!';
+    document.body.addEventListener('click', () => Speak.tts(document.getElementById('msg').textContent), { once: true });
+    if (left === 0) celebrate(true);
+  </script>
+</body>
+</html>

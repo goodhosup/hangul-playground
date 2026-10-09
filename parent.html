@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>부모방</title>
+</head>
+<body>
+  <div class="topbar">
+    <a class="icon-btn" href="index.html" aria-label="처음으로">🏠</a>
+    <div class="title">부모방</div>
+    <div style="width:72px"></div>
+  </div>
+  <main>
+    <div class="gate" id="gate">
+      <p>부모님 확인: <b id="qa"></b> = ?</p>
+      <input type="number" id="ans" inputmode="numeric">
+      <p><button class="big-btn" id="ok" style="font-size:22px;padding:12px 28px">확인</button></p>
+    </div>
+
+    <div class="parent" id="panel" hidden>
+      <h2>아이 이름</h2>
+      <div class="row">
+        <input type="text" id="name" placeholder="예: 민준" maxlength="10">
+        <button id="saveName">저장</button>
+      </div>
+      <p style="color:var(--muted);font-size:14px">이름은 이 기기에만 저장되고 어디에도 전송되지 않아요.</p>
+
+      <h2>소리</h2>
+      <div class="row">
+        <span id="voiceInfo"></span>
+        <span>
+          <button id="test">소리 테스트</button>
+          <button id="toggle"></button>
+        </span>
+      </div>
+
+      <h2>진도</h2>
+      <div class="row"><span>모은 스티커</span><b id="st"></b></div>
+      <div class="row"><span>마지막으로 논 날</span><b id="last"></b></div>
+      <table id="seen"></table>
+
+      <h2>초기화</h2>
+      <div class="row">
+        <span>스티커와 진도를 모두 지워요</span>
+        <button class="danger" id="reset">초기화</button>
+      </div>
+
+      <h2>사용 안내</h2>
+      <div class="row" style="display:block;line-height:1.6">
+        하루 10분 이내로, 꼭 함께 해 주세요. 아이가 그만하고 싶어 하면 바로 멈추고 다음 날 이어 가면 돼요.
+        단원별 수업 방법은 위키독스 학습책을 참고하세요.
+      </div>
+    </div>
+  </main>
+
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    const a = 3 + Math.floor(Math.random() * 6), b = 4 + Math.floor(Math.random() * 6);
+    document.getElementById('qa').textContent = a + ' × ' + b;
+    document.getElementById('ok').onclick = () => {
+      if (Number(document.getElementById('ans').value) === a * b) {
+        document.getElementById('gate').hidden = true;
+        document.getElementById('panel').hidden = false;
+        render();
+      } else {
+        document.getElementById('ans').value = '';
+      }
+    };
+
+    async function render() {
+      const p = Progress.get();
+      document.getElementById('name').value = p.childName;
+      document.getElementById('st').textContent = p.stickers + '개';
+      document.getElementById('last').textContent = p.lastPlayed || '아직 없음';
+      document.getElementById('toggle').textContent = p.soundOn === false ? '소리 켜기' : '소리 끄기';
+      setTimeout(() => {
+        document.getElementById('voiceInfo').textContent =
+          Speak.hasKorean() ? '한국어 음성 사용 가능 ✅' : '한국어 음성을 찾지 못했어요. 기기 설정에서 한국어 음성을 설치해 주세요.';
+      }, 500);
+
+      const words = await loadJSON('data/words.json');
+      document.getElementById('seen').innerHTML =
+        '<tr><th>단원</th><th>단어</th><th>본 횟수</th></tr>' +
+        words.map(w => '<tr><td>' + w.unit + '</td><td>' + w.emoji + ' ' + w.word + '</td><td>' + (p.seen[w.id] || 0) + '</td></tr>').join('');
+    }
+
+    document.getElementById('saveName').onclick = () => {
+      Progress.update(p => { p.childName = document.getElementById('name').value.trim(); });
+      render();
+    };
+    document.getElementById('test').onclick = () => Speak.tts('안녕! 같이 한글 놀이 하자!');
+    document.getElementById('toggle').onclick = () => {
+      Progress.update(p => { p.soundOn = p.soundOn === false; });
+      render();
+    };
+    document.getElementById('reset').onclick = () => {
+      if (confirm('스티커와 진도를 모두 지울까요?')) { Progress.reset(); render(); }
+    };
+  </script>
+</body>
+</html>
