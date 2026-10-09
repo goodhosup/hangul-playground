@@ -121,6 +121,7 @@
   "type": "consonant",
   "name": "기역",
   "say": "기역",
+  "sound": "그",
   "hint": "기차의 '기'",
   "shape": "기차 선로처럼 꺾인 모양",
   "examples": [
@@ -135,6 +136,7 @@
   "type": "consonant",
   "name": "니은",
   "say": "니은",
+  "sound": "느",
   "hint": "나비의 '나'",
   "shape": "ㄱ을 거꾸로 뒤집은 의자 모양",
   "examples": [
@@ -149,6 +151,7 @@
   "type": "consonant",
   "name": "디귿",
   "say": "디귿",
+  "sound": "드",
   "hint": "도토리의 '도'",
   "shape": "입을 오른쪽으로 벌린 모양",
   "examples": [
@@ -163,6 +166,7 @@
   "type": "consonant",
   "name": "리을",
   "say": "리을",
+  "sound": "르",
   "hint": "로봇의 '로'",
   "shape": "구불구불 뱀이 지나간 길",
   "examples": [
@@ -177,6 +181,7 @@
   "type": "consonant",
   "name": "미음",
   "say": "미음",
+  "sound": "므",
   "hint": "모자의 '모'",
   "shape": "네모난 상자",
   "examples": [
@@ -191,6 +196,7 @@
   "type": "consonant",
   "name": "비읍",
   "say": "비읍",
+  "sound": "브",
   "hint": "바다의 '바'",
   "shape": "물을 담는 양동이",
   "examples": [
@@ -205,6 +211,7 @@
   "type": "consonant",
   "name": "시옷",
   "say": "시옷",
+  "sound": "스",
   "hint": "사자의 '사'",
   "shape": "다리를 벌린 사람, 산꼭대기",
   "examples": [
@@ -219,6 +226,7 @@
   "type": "consonant",
   "name": "이응",
   "say": "이응",
+  "sound": "",
   "hint": "오리의 '오'",
   "shape": "동그란 공",
   "examples": [
@@ -233,6 +241,7 @@
   "type": "consonant",
   "name": "지읒",
   "say": "지읒",
+  "sound": "즈",
   "hint": "자동차의 '자'",
   "shape": "ㅅ 위에 모자를 쓴 모양",
   "examples": [
@@ -247,6 +256,7 @@
   "type": "consonant",
   "name": "치읓",
   "say": "치읓",
+  "sound": "츠",
   "hint": "치즈의 '치'",
   "shape": "ㅈ 위에 꼭지가 하나 더",
   "examples": [
@@ -261,6 +271,7 @@
   "type": "consonant",
   "name": "키읔",
   "say": "키읔",
+  "sound": "크",
   "hint": "코끼리의 '코'",
   "shape": "ㄱ 가운데 줄이 하나 더",
   "examples": [
@@ -275,6 +286,7 @@
   "type": "consonant",
   "name": "티읕",
   "say": "티읕",
+  "sound": "트",
   "hint": "토끼의 '토'",
   "shape": "ㄷ 가운데 줄이 하나 더",
   "examples": [
@@ -289,6 +301,7 @@
   "type": "consonant",
   "name": "피읖",
   "say": "피읖",
+  "sound": "프",
   "hint": "포도의 '포'",
   "shape": "기둥 두 개를 위아래로 덮은 문",
   "examples": [
@@ -303,6 +316,7 @@
   "type": "consonant",
   "name": "히읗",
   "say": "히읗",
+  "sound": "흐",
   "hint": "하마의 '하'",
   "shape": "모자 쓴 동그란 얼굴",
   "examples": [

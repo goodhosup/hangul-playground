@@ -29,12 +29,19 @@
     function pick(j) {
       document.querySelectorAll('.jamo-btn').forEach(b => b.classList.toggle('on', b.dataset.j === j));
       const info = J.byJ[j];
-      document.getElementById('shape').textContent = info.shape + (info.hint ? ' · ' + info.hint : '');
+      document.getElementById('shape').textContent = info.shape + (info.type === 'consonant' ? ` · ${info.name} · "${info.sound || '소리 없음'}" · ${info.hint}` : '');
       const exs = info.examples.map(id => J.byId[id]);
       document.getElementById('examples').innerHTML = exs.map(w =>
         `<button class="example" data-id="${w.id}"><div class="e">${w.emoji}</div><div class="w">${Jamo.highlight(w.word, j)}</div></button>`).join('');
       document.querySelectorAll('.example').forEach(b => b.onclick = () => Speak.say(J.byId[b.dataset.id]));
-      Speak.tts(info.say).then(() => info.hint ? Speak.tts(info.hint.replace(/'/g, '')) : null);
+      // 자음은 이름 → 소리 → 대표 낱말, 모음은 소리 → 모양 이야기
+      if (info.type === 'consonant') {
+        Speak.tts(info.name)
+          .then(() => Speak.tts(info.sound ? info.sound + ', ' + info.sound : '앞에서는 소리가 없어요', 0.7))
+          .then(() => Speak.tts(info.hint.replace(/'/g, '')));
+      } else {
+        Speak.tts(info.say).then(() => Speak.tts(info.shape));
+      }
       tapped.add(j);
       if (tapped.size === u.jamo.length && Progress.reward('sound-' + unit)) setTimeout(showStickerToast, 1500);
     }

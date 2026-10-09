@@ -72,6 +72,10 @@ CONSONANTS = [
     ("ㅎ", "히읗", "하마의 '하'", "모자 쓴 동그란 얼굴", ["hippo", "tiger", "sun", "grandma"]),
 ]
 
+# 자음이 내는 소리 (모음 'ㅡ'를 붙여 들려준다). ㅇ은 첫소리에서 소리가 없다.
+CONS_SOUND = {"ㄱ": "그", "ㄴ": "느", "ㄷ": "드", "ㄹ": "르", "ㅁ": "므", "ㅂ": "브", "ㅅ": "스",
+              "ㅇ": "", "ㅈ": "즈", "ㅊ": "츠", "ㅋ": "크", "ㅌ": "트", "ㅍ": "프", "ㅎ": "흐"}
+
 # 받침 단원에서 쓰는 받침 소리
 FINALS = {"ㅇ": "응", "ㄴ": "은", "ㅁ": "음", "ㄹ": "을", "ㄱ": "윽", "ㅂ": "읍"}
 
@@ -122,17 +126,17 @@ def _units():
     add("1-5", "내 이름 글자", "📛", ["name"])
     add("1-6", "복습 · 통글자 빙고", "🎲", ["bingo", "match"], review=True)
 
-    add("2-1", "입을 크게 ㅏ, 옆으로 ㅣ", "ㅏ", ["sound", "quiz", "trace"], jamo=["ㅏ", "ㅣ"])
-    add("2-2", "동그랗게 ㅗ, 쭉 내밀어 ㅜ", "ㅗ", ["sound", "quiz", "trace"], jamo=["ㅗ", "ㅜ"])
-    add("2-3", "ㅓ 와 ㅡ", "ㅓ", ["sound", "quiz", "trace"], jamo=["ㅓ", "ㅡ"])
-    add("2-4", "짝꿍 모음 ㅑ ㅕ ㅛ ㅠ", "ㅑ", ["sound", "quiz", "trace"], jamo=["ㅑ", "ㅕ", "ㅛ", "ㅠ"])
+    add("2-1", "입을 크게 ㅏ, 옆으로 ㅣ", "ㅏ", ["learn", "sound", "quiz", "trace"], jamo=["ㅏ", "ㅣ"])
+    add("2-2", "동그랗게 ㅗ, 쭉 내밀어 ㅜ", "ㅗ", ["learn", "sound", "quiz", "trace"], jamo=["ㅗ", "ㅜ"])
+    add("2-3", "ㅓ 와 ㅡ", "ㅓ", ["learn", "sound", "quiz", "trace"], jamo=["ㅓ", "ㅡ"])
+    add("2-4", "짝꿍 모음 ㅑ ㅕ ㅛ ㅠ", "ㅑ", ["learn", "sound", "quiz", "trace"], jamo=["ㅑ", "ㅕ", "ㅛ", "ㅠ"])
     add("2-5", "복습 · 모음 몸으로 만들기", "🤸", ["quiz", "sound"], jamo=ALL_VOWELS, review=True)
 
     for i, c in enumerate(CONSONANTS[:9]):
         ex = [w for w in c[4]][:2]
         names = "·".join(dict((w[0], w[1]) for w in WORDS)[e] for e in ex)
-        add(f"3-{i+1}", f"{c[0]} ({names})", c[0], ["sound", "quiz", "trace"], jamo=[c[0]])
-    add("3-10", "거센소리 친구들 ㅊ ㅋ ㅌ ㅍ ㅎ", "ㅊ", ["sound", "quiz", "trace"], jamo=ALL_CONS[9:])
+        add(f"3-{i+1}", f"{c[0]} ({names})", c[0], ["learn", "sound", "quiz", "trace"], jamo=[c[0]])
+    add("3-10", "거센소리 친구들 ㅊ ㅋ ㅌ ㅍ ㅎ", "ㅊ", ["learn", "sound", "quiz", "trace"], jamo=ALL_CONS[9:])
     add("3-11", "복습 · 자음 보물찾기", "💎", ["quiz", "sound"], jamo=ALL_CONS, review=True)
 
     add("4-1", "ㄱ + ㅏ = 가", "🧱", ["blocks"], blocks=dict(cons=["ㄱ", "ㄴ", "ㄷ"], vows=["ㅏ", "ㅣ", "ㅗ"], fins=[]))

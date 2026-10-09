@@ -19,6 +19,7 @@
 
   <main>
     <div class="hello" id="hello">안녕! 오늘은 뭐 하고 놀까?</div>
+    <a class="today" id="today" href="#" hidden></a>
     <div class="islands" id="islands"></div>
     <div class="section-title" id="stageTitle"></div>
     <div class="units" id="units"></div>
@@ -43,7 +44,7 @@
           <div class="big">${u.icon}</div>
           <div class="name"><small>${u.unit}</small> ${u.title}</div>
           <div class="acts">
-            ${u.acts.map(a => `<a class="icon-btn act" href="${actHref(a, u.unit)}" aria-label="${ACTS[a].label}">
+            ${u.acts.map(a => `<a class="icon-btn act ${isDone(a, u.unit) ? 'done' : ''}" href="${actHref(a, u.unit)}" aria-label="${ACTS[a].label}">
               <span>${ACTS[a].icon}</span><small>${ACTS[a].label}</small></a>`).join('')}
           </div>
         </div>`).join('');
@@ -71,6 +72,20 @@
       });
 
       renderStage(Math.min(p.lastStage, p.unlockedStage));
+
+      // 오늘의 놀이: 아직 안 한 놀이 중 가장 앞의 것. 무엇부터 할지 몰라도 이것만 누르면 된다
+      const next = (() => {
+        for (const u of units.filter(x => x.stage <= p.unlockedStage))
+          for (const a of u.acts) if (!isDone(a, u.unit)) return { u, a };
+        return null;
+      })();
+      const today = document.getElementById('today');
+      if (next) {
+        today.href = actHref(next.a, next.u.unit);
+        today.innerHTML = `<span class="big">${ACTS[next.a].icon}</span>
+          <span>오늘의 놀이<small>${next.u.unit} ${next.u.title}${next.u.title === ACTS[next.a].label ? '' : ' · ' + ACTS[next.a].label}</small></span><span class="go">▶️</span>`;
+        today.hidden = false;
+      }
     })();
   </script>
 </body>

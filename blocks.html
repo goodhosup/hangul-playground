@@ -58,6 +58,15 @@
 
     async function choose(k, j) {
       if (busy) return;
+      // 퀴즈에서는 틀린 블록을 넣지 않고 맞는 블록을 반짝여 알려 준다
+      if (quiz && pick[k] !== j) {
+        const d = Hangul.decompose(target), need = { c: d.cho, v: d.jung, f: d.jong }[k];
+        if (j !== need) {
+          const btn = document.querySelector(`.block[data-k="${k}"][data-j="${j}"]`);
+          return wrong(btn, need ? document.querySelector(`.block[data-k="${k}"][data-j="${need}"]`) : null);
+        }
+        document.querySelectorAll('.block.hint').forEach(b => { b.classList.remove('hint'); b.dataset.misses = 0; });
+      }
       pick[k] = pick[k] === j ? '' : j;
       const syl = render();
       if (!pick[k]) return;
@@ -84,6 +93,7 @@
         `<button class="icon-btn" id="replay" style="width:100px;height:100px;font-size:50px">🔊</button><span id="peek" style="color:var(--muted)"></span>`;
       document.getElementById('replay').onclick = () => Speak.tts(target, 0.7);
       pick = { c: '', v: '', f: '' };
+      document.querySelectorAll('.block.hint').forEach(b => { b.classList.remove('hint'); b.dataset.misses = 0; });
       render();
       Speak.tts('이 글자를 만들어 볼까?').then(() => Speak.tts(target, 0.7));
     }

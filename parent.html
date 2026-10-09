@@ -40,6 +40,12 @@
         </span>
       </div>
 
+      <h2>처음 배우는 아이 모드</h2>
+      <div class="row">
+        <span>보기를 2개로 줄이고, 틀리면 바로 정답을 반짝여 알려 줘요</span>
+        <button id="beginner"></button>
+      </div>
+
       <h2>열어 둘 단계</h2>
       <div class="row">
         <span>이 단계까지 아이 화면에 열려요</span>
@@ -87,6 +93,7 @@
       document.getElementById('st').textContent = p.stickers + '개';
       document.getElementById('last').textContent = p.lastPlayed || '아직 없음';
       document.getElementById('toggle').textContent = p.soundOn === false ? '소리 켜기' : '소리 끄기';
+      document.getElementById('beginner').textContent = p.beginner === false ? '꺼짐 → 켜기' : '켜짐 → 끄기';
       setTimeout(() => {
         document.getElementById('voiceInfo').textContent =
           Speak.hasKorean() ? '한국어 음성 사용 가능 ✅' : '한국어 음성을 찾지 못했어요. 기기 설정에서 한국어 음성을 설치해 주세요.';
@@ -111,6 +118,10 @@
     document.getElementById('test').onclick = () => Speak.tts('안녕! 같이 한글 놀이 하자!');
     document.getElementById('toggle').onclick = () => {
       Progress.update(p => { p.soundOn = p.soundOn === false; });
+      render();
+    };
+    document.getElementById('beginner').onclick = () => {
+      Progress.update(p => { p.beginner = p.beginner === false; });
       render();
     };
     document.getElementById('reset').onclick = () => {

@@ -92,6 +92,7 @@
   "title": "입을 크게 ㅏ, 옆으로 ㅣ",
   "icon": "ㅏ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -107,6 +108,7 @@
   "title": "동그랗게 ㅗ, 쭉 내밀어 ㅜ",
   "icon": "ㅗ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -122,6 +124,7 @@
   "title": "ㅓ 와 ㅡ",
   "icon": "ㅓ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -137,6 +140,7 @@
   "title": "짝꿍 모음 ㅑ ㅕ ㅛ ㅠ",
   "icon": "ㅑ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -177,6 +181,7 @@
   "title": "ㄱ (기차·가방)",
   "icon": "ㄱ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -191,6 +196,7 @@
   "title": "ㄴ (나비·나무)",
   "icon": "ㄴ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -205,6 +211,7 @@
   "title": "ㄷ (도토리·돼지)",
   "icon": "ㄷ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -219,6 +226,7 @@
   "title": "ㄹ (라면·로봇)",
   "icon": "ㄹ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -233,6 +241,7 @@
   "title": "ㅁ (모자·말)",
   "icon": "ㅁ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -247,6 +256,7 @@
   "title": "ㅂ (바다·버스)",
   "icon": "ㅂ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -261,6 +271,7 @@
   "title": "ㅅ (사자·소)",
   "icon": "ㅅ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -275,6 +286,7 @@
   "title": "ㅇ (오리·우유)",
   "icon": "ㅇ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -289,6 +301,7 @@
   "title": "ㅈ (자동차·주스)",
   "icon": "ㅈ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"
@@ -303,6 +316,7 @@
   "title": "거센소리 친구들 ㅊ ㅋ ㅌ ㅍ ㅎ",
   "icon": "ㅊ",
   "acts": [
+   "learn",
    "sound",
    "quiz",
    "trace"

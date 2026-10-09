@@ -1,13 +1,18 @@
 // 진도 저장: 이 기기의 localStorage에만 저장한다.
 const Progress = (() => {
   const KEY = 'hangul-progress';
-  const DEFAULT = { v: 2, childName: '', unlockedStage: 6, lastStage: 1, stickers: 0, seen: {}, rewarded: {}, soundOn: true, lastPlayed: null };
+  const DEFAULT = { v: 2, childName: '', unlockedStage: 6, lastStage: 1, stickers: 0, seen: {}, rewarded: {}, soundOn: true, beginner: true, done: {}, lastPlayed: null };
 
   function get() {
     try {
       const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
       // 1차 버전은 1단계만 열려 있었다: 이제 기본은 전체 열림
       if (!saved.v) { saved.v = 2; saved.unlockedStage = 6; }
+      // 예전 기록(하루 단위 스티커)에서 끝낸 놀이 목록을 만든다
+      if (!saved.done && saved.rewarded) {
+        saved.done = {};
+        Object.keys(saved.rewarded).forEach(k => { saved.done[k.split('@')[0]] = true; });
+      }
       return Object.assign({}, DEFAULT, saved);
     } catch (e) {
       return Object.assign({}, DEFAULT);
@@ -36,6 +41,7 @@ const Progress = (() => {
     const key = activityKey + '@' + today;
     let given = false;
     update(p => {
+      p.done[activityKey] = true;
       if (!p.rewarded[key]) {
         p.rewarded[key] = true;
         p.stickers += 1;
@@ -49,5 +55,9 @@ const Progress = (() => {
     try { localStorage.removeItem(KEY); } catch (e) {}
   }
 
-  return { get, save, update, markSeen, reward, reset };
+  function isDone(activityKey) {
+    return !!get().done[activityKey];
+  }
+
+  return { get, save, update, markSeen, reward, isDone, reset };
 })();

@@ -52,13 +52,13 @@
         if (LINES.some(l => l.every(k => hit.has(k)))) {
           over = true;
           await Speak.tts('빙고!');
-          return finishActivity('bingo', document.getElementById('after'));
+          return finishActivity('bingo-1-6', document.getElementById('after'));
         }
         call();
       } else {
-        wrong(b);
-        // 두 번 틀리면 그림 힌트
-        if (++misses >= 2) document.getElementById('peek').textContent = cells[current].emoji;
+        // 그림 힌트를 먼저 보여 주고, 그래도 어려우면 칸을 반짝인다
+        if (++misses >= (beginner() ? 1 : 2)) document.getElementById('peek').textContent = cells[current].emoji;
+        wrong(b, misses >= (beginner() ? 2 : 3) ? document.querySelector(`.bcell[data-i="${current}"]`) : null);
       }
     }
 

@@ -28,7 +28,8 @@ def build_data():
     for j, say, shape, ex in C.VOWELS:
         jamo.append({"j": j, "type": "vowel", "name": say, "say": say, "shape": shape, "examples": ex})
     for j, name, hint, shape, ex in C.CONSONANTS:
-        jamo.append({"j": j, "type": "consonant", "name": name, "say": name, "hint": hint, "shape": shape, "examples": ex})
+        jamo.append({"j": j, "type": "consonant", "name": name, "say": name, "sound": C.CONS_SOUND[j],
+                     "hint": hint, "shape": shape, "examples": ex})
     for j in jamo:
         for e in j["examples"]:
             assert e in ids, e

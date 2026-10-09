@@ -46,7 +46,7 @@
       // 같은 단원에서 2개 고르고, 모자라면 다른 단원에서 채움
       let others = shuffle(pool.filter(w => w.id !== answer.id));
       if (others.length < 2) others = others.concat(shuffle(all.filter(w => !pool.includes(w))));
-      const options = shuffle([answer, ...others.slice(0, 2)]);
+      const options = shuffle([answer, ...others.slice(0, choiceCount() - 1)]);
       current = { answer, mode };
 
       const q = document.getElementById('question');
@@ -56,7 +56,8 @@
         Speak.tts('어디 있을까?').then(() => Speak.say(answer));
       } else if (mode === 'read') {
         q.innerHTML = '<span>' + answer.word + '</span>';
-        Speak.tts('이 글자랑 맞는 그림을 찾아 볼까?');
+        // 처음 배우는 아이는 글자를 소리로도 들려준다
+        Speak.tts('이 글자랑 맞는 그림을 찾아 볼까?').then(() => beginner() ? Speak.say(answer) : null);
       } else {
         q.innerHTML = '<span style="font-size:min(30vw,140px)">' + answer.emoji + '</span>';
         Speak.tts('이 그림의 이름은 어떤 글자일까?');
@@ -66,6 +67,8 @@
       c.innerHTML = options.map(o => mode === 'pic'
         ? '<button class="choice text" data-id="' + o.id + '">' + o.word + '</button>'
         : '<button class="choice" data-id="' + o.id + '">' + o.emoji + '</button>').join('');
+      c.style.gridTemplateColumns = `repeat(${options.length}, 1fr)`;
+      c.style.maxWidth = options.length * 240 + 'px';
       c.querySelectorAll('.choice').forEach(b => b.onclick = () => pick(b));
     }
 
@@ -82,10 +85,7 @@
         if (qn >= ROUND) return finish();
         ask();
       } else {
-        btn.classList.remove('shake');
-        void btn.offsetWidth;
-        btn.classList.add('shake');
-        Speak.tts('다시 찾아볼까?');
+        wrong(btn, document.querySelector(`.choice[data-id="${current.answer.id}"]`));
       }
     }
 

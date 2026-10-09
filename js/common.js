@@ -1,5 +1,6 @@
 // 공통 도우미: 데이터 불러오기, 주소 파라미터, 상단 바, 칭찬 효과
 const ACTS = {
+  learn:     { page: 'learn.html',  icon: '👶', label: '처음 배우기' },
   cards:     { page: 'cards.html',  icon: '🃏', label: '그림 카드' },
   match:     { page: 'match.html',  icon: '🎯', label: '짝 맞추기' },
   chain:     { page: 'listen.html', icon: '🔗', label: '끝말 잇기' },
@@ -105,13 +106,30 @@ function celebrate(big = false) {
 const PRAISE = ['우와, 맞았어!', '최고야!', '잘 찾았어!', '대단해!', '정답이야!'];
 function praise() { return PRAISE[Math.floor(Math.random() * PRAISE.length)]; }
 
-// 틀렸을 때: 흔들고 부드럽게 다시
-function wrong(btn) {
+// 처음 배우는 아이 모드 (부모방에서 끌 수 있다): 보기 수를 줄이고 바로 힌트를 준다
+function beginner() { return Progress.get().beginner !== false; }
+function choiceCount() { return beginner() ? 2 : 3; }
+
+// 틀렸을 때: 흔들고 부드럽게 다시. correct 가 있으면 정답을 반짝여 알려 준다
+// (처음 배우는 아이 모드는 1번, 아니면 2번 틀린 뒤)
+function wrong(btn, correct) {
   btn.classList.remove('shake');
   void btn.offsetWidth;
   btn.classList.add('shake');
+  if (correct) {
+    const misses = Number(correct.dataset.misses || 0) + 1;
+    correct.dataset.misses = misses;
+    if (misses >= (beginner() ? 1 : 2)) {
+      correct.classList.add('hint');
+      Speak.tts('반짝이는 걸 눌러 봐!');
+      return;
+    }
+  }
   Speak.tts('다시 찾아볼까?');
 }
+
+// 끝낸 놀이인지 (단원별)
+function isDone(act, unit) { return Progress.isDone(act + '-' + unit); }
 
 // 스티커를 받았을 때 크게 보여 준다
 function showStickerToast() {

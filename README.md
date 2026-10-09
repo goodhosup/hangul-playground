@@ -12,13 +12,19 @@
 |---|---|---|
 | 0 말소리 놀이 | 0-1 ~ 0-3 | `listen.html` (끝말 잇기·첫소리 찾기·손뼉 치기) |
 | 1 그림 통글자 | 1-1 ~ 1-6 | `cards.html`, `match.html`, `name.html`, `bingo.html` |
-| 2 모음 친구 | 2-1 ~ 2-5 | `sound.html`, `quiz.html`, `trace.html` |
-| 3 자음 친구 | 3-1 ~ 3-11 | `sound.html`, `quiz.html`, `trace.html` |
+| 2 모음 친구 | 2-1 ~ 2-5 | `learn.html`, `sound.html`, `quiz.html`, `trace.html` |
+| 3 자음 친구 | 3-1 ~ 3-11 | `learn.html`, `sound.html`, `quiz.html`, `trace.html` |
 | 4 글자 블록 | 4-1 ~ 4-4 | `blocks.html`, `table.html`, `split.html` |
 | 5 받침 글자 | 5-1 ~ 5-7 | `cards.html`, `blocks.html`, `match.html` |
 | 6 짧은 문장 | 6-1 ~ 6-3 | `read.html` |
 
 그 밖에 `index.html`(놀이터 지도), `stickers.html`(스티커판), `parent.html`(부모방: 아이 이름, 소리 테스트, 열어 둘 단계, 진도, 초기화)이 있습니다.
+
+## 처음 배우는 아이
+
+- 첫 화면의 **오늘의 놀이** 버튼이 아직 안 한 놀이 중 가장 앞의 것을 골라 줍니다. 끝낸 놀이에는 ✓ 표시가 붙습니다.
+- 자음·모음 단원은 `learn.html`(처음 배우기: 만나기 → 따라 말하기 → 낱말 속에서 → 찾기)로 시작합니다.
+- 부모방의 **처음 배우는 아이 모드**(기본 켜짐)는 보기를 2개로 줄이고, 틀리면 정답을 반짝여 알려 줍니다.
 
 ## 내용 고치기
 
