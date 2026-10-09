@@ -1,0 +1,315 @@
+[
+ {
+  "j": "ㅏ",
+  "type": "vowel",
+  "name": "아",
+  "say": "아",
+  "shape": "기둥 옆으로 작은 팔이 밖으로 뻗었어요",
+  "examples": [
+   "baby",
+   "apple",
+   "banana"
+  ]
+ },
+ {
+  "j": "ㅣ",
+  "type": "vowel",
+  "name": "이",
+  "say": "이",
+  "shape": "똑바로 선 막대기예요",
+  "examples": [
+   "train",
+   "tooth",
+   "giraffe"
+  ]
+ },
+ {
+  "j": "ㅗ",
+  "type": "vowel",
+  "name": "오",
+  "say": "오",
+  "shape": "땅 위에 작은 새싹이 위로 쏙 나왔어요",
+  "examples": [
+   "duck",
+   "grape",
+   "sweetpotato"
+  ]
+ },
+ {
+  "j": "ㅜ",
+  "type": "vowel",
+  "name": "우",
+  "say": "우",
+  "shape": "땅 아래로 뿌리가 쏙 내려갔어요",
+  "examples": [
+   "milk",
+   "watermelon",
+   "cloud"
+  ]
+ },
+ {
+  "j": "ㅓ",
+  "type": "vowel",
+  "name": "어",
+  "say": "어",
+  "shape": "기둥 왼쪽으로 작은 팔이 뻗었어요",
+  "examples": [
+   "spider",
+   "turtle",
+   "bus"
+  ]
+ },
+ {
+  "j": "ㅡ",
+  "type": "vowel",
+  "name": "으",
+  "say": "으",
+  "shape": "옆으로 누운 막대기예요",
+  "examples": [
+   "crayon",
+   "ski",
+   "truck"
+  ]
+ },
+ {
+  "j": "ㅑ",
+  "type": "vowel",
+  "name": "야",
+  "say": "야",
+  "shape": "ㅏ에 팔이 하나 더! 두 팔이 밖으로",
+  "examples": [
+   "baseball",
+   "palm"
+  ]
+ },
+ {
+  "j": "ㅕ",
+  "type": "vowel",
+  "name": "여",
+  "say": "여",
+  "shape": "ㅓ에 팔이 하나 더! 두 팔이 왼쪽으로",
+  "examples": [
+   "fox",
+   "star"
+  ]
+ },
+ {
+  "j": "ㅛ",
+  "type": "vowel",
+  "name": "요",
+  "say": "요",
+  "shape": "새싹이 두 개 쏙쏙",
+  "examples": [
+   "yoyo",
+   "cooking"
+  ]
+ },
+ {
+  "j": "ㅠ",
+  "type": "vowel",
+  "name": "유",
+  "say": "유",
+  "shape": "뿌리가 두 개 쑥쑥",
+  "examples": [
+   "milk",
+   "tangerine",
+   "tissue"
+  ]
+ },
+ {
+  "j": "ㄱ",
+  "type": "consonant",
+  "name": "기역",
+  "say": "기역",
+  "hint": "기차의 '기'",
+  "shape": "기차 선로처럼 꺾인 모양",
+  "examples": [
+   "train",
+   "bag",
+   "cat",
+   "turtle"
+  ]
+ },
+ {
+  "j": "ㄴ",
+  "type": "consonant",
+  "name": "니은",
+  "say": "니은",
+  "hint": "나비의 '나'",
+  "shape": "ㄱ을 거꾸로 뒤집은 의자 모양",
+  "examples": [
+   "butterfly",
+   "tree",
+   "snowman",
+   "song"
+  ]
+ },
+ {
+  "j": "ㄷ",
+  "type": "consonant",
+  "name": "디귿",
+  "say": "디귿",
+  "hint": "도토리의 '도'",
+  "shape": "입을 오른쪽으로 벌린 모양",
+  "examples": [
+   "acorn",
+   "pig",
+   "bridge",
+   "moon"
+  ]
+ },
+ {
+  "j": "ㄹ",
+  "type": "consonant",
+  "name": "리을",
+  "say": "리을",
+  "hint": "로봇의 '로'",
+  "shape": "구불구불 뱀이 지나간 길",
+  "examples": [
+   "ramen",
+   "robot",
+   "lemon",
+   "ribbon"
+  ]
+ },
+ {
+  "j": "ㅁ",
+  "type": "consonant",
+  "name": "미음",
+  "say": "미음",
+  "hint": "모자의 '모'",
+  "shape": "네모난 상자",
+  "examples": [
+   "hat",
+   "horse",
+   "rainbow",
+   "door"
+  ]
+ },
+ {
+  "j": "ㅂ",
+  "type": "consonant",
+  "name": "비읍",
+  "say": "비읍",
+  "hint": "바다의 '바'",
+  "shape": "물을 담는 양동이",
+  "examples": [
+   "sea",
+   "bus",
+   "banana",
+   "ship"
+  ]
+ },
+ {
+  "j": "ㅅ",
+  "type": "consonant",
+  "name": "시옷",
+  "say": "시옷",
+  "hint": "사자의 '사'",
+  "shape": "다리를 벌린 사람, 산꼭대기",
+  "examples": [
+   "lion",
+   "cow",
+   "apple",
+   "watermelon"
+  ]
+ },
+ {
+  "j": "ㅇ",
+  "type": "consonant",
+  "name": "이응",
+  "say": "이응",
+  "hint": "오리의 '오'",
+  "shape": "동그란 공",
+  "examples": [
+   "duck",
+   "milk",
+   "cucumber",
+   "baby"
+  ]
+ },
+ {
+  "j": "ㅈ",
+  "type": "consonant",
+  "name": "지읒",
+  "say": "지읒",
+  "hint": "자동차의 '자'",
+  "shape": "ㅅ 위에 모자를 쓴 모양",
+  "examples": [
+   "car",
+   "juice",
+   "bike",
+   "earth"
+  ]
+ },
+ {
+  "j": "ㅊ",
+  "type": "consonant",
+  "name": "치읓",
+  "say": "치읓",
+  "hint": "치즈의 '치'",
+  "shape": "ㅈ 위에 꼭지가 하나 더",
+  "examples": [
+   "cheese",
+   "soccer",
+   "toothbrush",
+   "cherry"
+  ]
+ },
+ {
+  "j": "ㅋ",
+  "type": "consonant",
+  "name": "키읔",
+  "say": "키읔",
+  "hint": "코끼리의 '코'",
+  "shape": "ㄱ 가운데 줄이 하나 더",
+  "examples": [
+   "elephant",
+   "cake",
+   "kiwi",
+   "crayon"
+  ]
+ },
+ {
+  "j": "ㅌ",
+  "type": "consonant",
+  "name": "티읕",
+  "say": "티읕",
+  "hint": "토끼의 '토'",
+  "shape": "ㄷ 가운데 줄이 하나 더",
+  "examples": [
+   "rabbit",
+   "tomato",
+   "truck",
+   "tent"
+  ]
+ },
+ {
+  "j": "ㅍ",
+  "type": "consonant",
+  "name": "피읖",
+  "say": "피읖",
+  "hint": "포도의 '포'",
+  "shape": "기둥 두 개를 위아래로 덮은 문",
+  "examples": [
+   "grape",
+   "pizza",
+   "penguin",
+   "fork"
+  ]
+ },
+ {
+  "j": "ㅎ",
+  "type": "consonant",
+  "name": "히읗",
+  "say": "히읗",
+  "hint": "하마의 '하'",
+  "shape": "모자 쓴 동그란 얼굴",
+  "examples": [
+   "hippo",
+   "tiger",
+   "sun",
+   "grandma"
+  ]
+ }
+]

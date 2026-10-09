@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>통글자 빙고</title>
+</head>
+<body>
+  <div id="topbar"></div>
+  <main class="stage-area">
+    <div class="question"><button class="icon-btn" id="replay" style="width:100px;height:100px;font-size:50px">🔊</button><span id="peek"></span></div>
+    <div class="hint-text" id="hint">소리를 듣고 글자를 찾아요. 한 줄이 되면 빙고!</div>
+    <div class="bingo" id="grid"></div>
+    <div id="after"></div>
+  </main>
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/hangul.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    let cells = [], hit = new Set(), current = null, misses = 0, over = false;
+    const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+    function call() {
+      const left = cells.map((w, i) => i).filter(i => !hit.has(i));
+      current = left[Math.floor(Math.random() * left.length)];
+      misses = 0;
+      document.getElementById('peek').textContent = '';
+      Speak.say(cells[current]);
+    }
+
+    function render() {
+      document.getElementById('grid').innerHTML = cells.map((w, i) =>
+        `<button class="bcell ${hit.has(i) ? 'hit' : ''}" data-i="${i}">${w.word}</button>`).join('');
+      document.querySelectorAll('.bcell').forEach(b => b.onclick = () => tap(b));
+    }
+
+    async function tap(b) {
+      if (over) return;
+      const i = Number(b.dataset.i);
+      if (hit.has(i)) return;
+      if (i === current) {
+        hit.add(i);
+        render();
+        celebrate();
+        await Speak.tts(praise());
+        if (LINES.some(l => l.every(k => hit.has(k)))) {
+          over = true;
+          await Speak.tts('빙고!');
+          return finishActivity('bingo', document.getElementById('after'));
+        }
+        call();
+      } else {
+        wrong(b);
+        // 두 번 틀리면 그림 힌트
+        if (++misses >= 2) document.getElementById('peek').textContent = cells[current].emoji;
+      }
+    }
+
+    (async () => {
+      const u = await getUnit('1-6');
+      topbar(unitTitle(u));
+      cells = shuffle(await wordsFor(u)).slice(0, 9);
+      render();
+      document.getElementById('replay').onclick = () => Speak.say(cells[current]);
+      await startCover('🎲');
+      call();
+    })();
+  </script>
+</body>
+</html>

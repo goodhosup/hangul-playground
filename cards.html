@@ -102,10 +102,9 @@
     });
 
     (async () => {
-      const [all, units] = await Promise.all([loadJSON('data/words.json'), loadJSON('data/units.json')]);
-      words = all.filter(w => w.unit === unit);
-      const u = units.find(x => x.unit === unit);
-      if (u) document.getElementById('title').textContent = u.icon + ' ' + u.title;
+      const u = await getUnit(unit);
+      words = shuffle(await wordsFor(u)).slice(0, 10);
+      document.getElementById('title').textContent = unitTitle(u);
       show();
     })();
   </script>

@@ -40,6 +40,12 @@
         </span>
       </div>
 
+      <h2>열어 둘 단계</h2>
+      <div class="row">
+        <span>이 단계까지 아이 화면에 열려요</span>
+        <select id="stage" style="font-size:18px;padding:6px 10px;border-radius:10px;font-family:inherit"></select>
+      </div>
+
       <h2>진도</h2>
       <div class="row"><span>모은 스티커</span><b id="st"></b></div>
       <div class="row"><span>마지막으로 논 날</span><b id="last"></b></div>
@@ -86,7 +92,13 @@
           Speak.hasKorean() ? '한국어 음성 사용 가능 ✅' : '한국어 음성을 찾지 못했어요. 기기 설정에서 한국어 음성을 설치해 주세요.';
       }, 500);
 
-      const words = await loadJSON('data/words.json');
+      const play = await loadJSON('data/play.json');
+      const sel = document.getElementById('stage');
+      sel.innerHTML = play.stages.map(st => `<option value="${st.n}">${st.n}단계 · ${st.name}</option>`).join('');
+      sel.value = p.unlockedStage;
+      sel.onchange = () => Progress.update(q => { q.unlockedStage = Number(sel.value); q.lastStage = Math.min(q.lastStage, q.unlockedStage); });
+
+      const words = (await loadJSON('data/words.json')).filter(w => w.unit !== 'ex');
       document.getElementById('seen').innerHTML =
         '<tr><th>단원</th><th>단어</th><th>본 횟수</th></tr>' +
         words.map(w => '<tr><td>' + w.unit + '</td><td>' + w.emoji + ' ' + w.word + '</td><td>' + (p.seen[w.id] || 0) + '</td></tr>').join('');

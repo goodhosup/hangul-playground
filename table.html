@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>가나다표</title>
+</head>
+<body>
+  <div id="topbar"></div>
+  <main class="stage-area">
+    <div class="nav">
+      <button class="big-btn" id="song">🎶 가나다 노래</button>
+    </div>
+    <div class="hint-text">글자를 누르면 소리가 나요. 위쪽 모음을 누르면 그 줄을 노래해요.</div>
+    <div class="gtable" id="grid" style="width:min(96vw,640px)"></div>
+    <div id="after"></div>
+  </main>
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/hangul.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    const VOWELS = ['ㅏ', 'ㅓ', 'ㅗ', 'ㅜ', 'ㅡ', 'ㅣ'];
+    let CONS = [], playing = false, sung = 0;
+
+    function cell(c, v) { return document.querySelector(`.gcell[data-c="${c}"][data-v="${v}"]`); }
+
+    async function sing(v) {
+      if (playing) return;
+      playing = true;
+      for (const c of CONS) {
+        const el = cell(c, v);
+        el.classList.add('on');
+        el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        await Speak.tts(Hangul.compose(c, v), 0.9);
+        el.classList.remove('on');
+      }
+      playing = false;
+      if (++sung === 1 && Progress.reward('table')) showStickerToast();
+    }
+
+    (async () => {
+      const u = await getUnit('4-2');
+      topbar(unitTitle(u));
+      CONS = u.blocks.cons;
+      const g = document.getElementById('grid');
+      g.style.gridTemplateColumns = `repeat(${VOWELS.length + 1}, 1fr)`;
+      let html = '<div class="gcell head"></div>' + VOWELS.map(v => `<button class="gcell head" data-col="${v}">${v}</button>`).join('');
+      for (const c of CONS) {
+        html += `<div class="gcell head" style="display:flex;align-items:center;justify-content:center">${c}</div>`;
+        html += VOWELS.map(v => `<button class="gcell" data-c="${c}" data-v="${v}">${Hangul.compose(c, v)}</button>`).join('');
+      }
+      g.innerHTML = html;
+      g.querySelectorAll('.gcell[data-c]').forEach(b => b.onclick = () => {
+        b.classList.add('on'); Speak.tts(b.textContent).then(() => b.classList.remove('on'));
+      });
+      g.querySelectorAll('[data-col]').forEach(b => b.onclick = () => sing(b.dataset.col));
+      document.getElementById('song').onclick = () => sing('ㅏ');
+    })();
+  </script>
+</body>
+</html>

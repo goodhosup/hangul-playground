@@ -1,11 +1,14 @@
 // 진도 저장: 이 기기의 localStorage에만 저장한다.
 const Progress = (() => {
   const KEY = 'hangul-progress';
-  const DEFAULT = { childName: '', unlockedStage: 1, stickers: 0, seen: {}, rewarded: {}, soundOn: true, lastPlayed: null };
+  const DEFAULT = { v: 2, childName: '', unlockedStage: 6, lastStage: 1, stickers: 0, seen: {}, rewarded: {}, soundOn: true, lastPlayed: null };
 
   function get() {
     try {
-      return Object.assign({}, DEFAULT, JSON.parse(localStorage.getItem(KEY) || '{}'));
+      const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+      // 1차 버전은 1단계만 열려 있었다: 이제 기본은 전체 열림
+      if (!saved.v) { saved.v = 2; saved.unlockedStage = 6; }
+      return Object.assign({}, DEFAULT, saved);
     } catch (e) {
       return Object.assign({}, DEFAULT);
     }

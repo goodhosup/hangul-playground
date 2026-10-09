@@ -45,7 +45,7 @@
       const answer = pool[qn % pool.length];
       // 같은 단원에서 2개 고르고, 모자라면 다른 단원에서 채움
       let others = shuffle(pool.filter(w => w.id !== answer.id));
-      if (others.length < 2) others = others.concat(shuffle(all.filter(w => w.unit !== unit)));
+      if (others.length < 2) others = others.concat(shuffle(all.filter(w => !pool.includes(w))));
       const options = shuffle([answer, ...others.slice(0, 2)]);
       current = { answer, mode };
 
@@ -97,19 +97,16 @@
         '<div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">' +
         '<button class="big-btn" onclick="location.reload()">한 번 더!</button>' +
         '<a class="big-btn" style="background:var(--s2)" href="index.html">처음으로</a></div>';
-      if (Progress.reward('match-' + unit)) showStickerToast();
-      else { celebrate(true); Speak.tts('다 맞혔어! 정말 잘했어!'); }
+      finishActivity('match-' + unit, null);
     }
 
     (async () => {
       all = await loadJSON('data/words.json');
-      pool = shuffle(all.filter(w => w.unit === unit));
-      // 시작 화면: 첫 터치가 있어야 소리가 나는 기기(iOS) 대비
-      const cover = document.createElement('div');
-      cover.className = 'start-cover';
-      cover.innerHTML = '<div class="big">🎯</div><button class="big-btn">시작!</button>';
-      document.body.appendChild(cover);
-      cover.querySelector('button').onclick = () => { cover.remove(); ask(); };
+      const u = await getUnit(unit);
+      document.title = u.title + ' · 짝 맞추기';
+      pool = shuffle(await wordsFor(u));
+      await startCover('🎯');
+      ask();
     })();
   </script>
 </body>

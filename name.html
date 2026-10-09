@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>내 이름 글자</title>
+</head>
+<body>
+  <div id="topbar"></div>
+  <main class="stage-area" id="main">
+    <div class="panel" id="nameCard">
+      <div class="hint-text">내 이름</div>
+      <div class="word huge" id="name"></div>
+    </div>
+    <div class="progress-stars" id="stars"></div>
+    <div class="hint-text" id="hint"></div>
+    <div class="choices" id="choices"></div>
+    <div id="after"></div>
+  </main>
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/hangul.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    const ROUNDS = 4;
+    let name = '', qn = 0, locked = false;
+    const FAMILY = ['엄마', '아빠', '아기', '토끼', '기차', '사과', '포도'];
+    const SYLS = ['가', '나', '다', '마', '바', '사', '아', '자', '하', '토', '기', '포'];
+
+    async function readName() {
+      const spans = document.querySelectorAll('#name span');
+      for (const s of spans) { s.classList.add('on'); await Speak.tts(s.textContent, 0.7); s.classList.remove('on'); }
+      await Speak.tts(name);
+    }
+
+    function ask() {
+      locked = false;
+      document.getElementById('stars').textContent = '⭐'.repeat(qn) + '☆'.repeat(ROUNDS - qn);
+      let answer, opts;
+      if (qn % 2 === 0) {
+        answer = name;
+        opts = shuffle([name, ...shuffle(FAMILY.filter(f => f !== name)).slice(0, 2)]);
+        document.getElementById('hint').textContent = '내 이름은 어디 있을까?';
+        Speak.tts('내 이름을 찾아 볼까?');
+        document.getElementById('nameCard').style.visibility = qn === 0 ? 'visible' : 'hidden';
+      } else {
+        answer = name[0];
+        opts = shuffle([answer, ...shuffle(SYLS.filter(s => s !== answer)).slice(0, 2)]);
+        document.getElementById('hint').textContent = '내 이름의 첫 글자는?';
+        Speak.tts('내 이름 첫 글자를 찾아 볼까? ' + name[0] + '!');
+        document.getElementById('nameCard').style.visibility = 'visible';
+      }
+      const c = document.getElementById('choices');
+      c.innerHTML = opts.map(o => `<button class="choice text" data-v="${o}">${o}</button>`).join('');
+      c.querySelectorAll('.choice').forEach(b => b.onclick = async () => {
+        if (locked) return;
+        if (b.dataset.v === answer) {
+          locked = true; b.classList.add('right'); celebrate();
+          await Speak.tts(praise() + ' ' + answer);
+          qn++;
+          if (qn >= ROUNDS) {
+            document.getElementById('choices').innerHTML = '';
+            document.getElementById('hint').textContent = '';
+            document.getElementById('nameCard').style.visibility = 'visible';
+            return finishActivity('name', document.getElementById('after'));
+          }
+          ask();
+        } else { wrong(b); Speak.tts(b.dataset.v); }
+      });
+    }
+
+    (async () => {
+      const u = await getUnit('1-5');
+      topbar(unitTitle(u));
+      name = Progress.get().childName;
+      if (!name) {
+        document.getElementById('main').innerHTML =
+          '<div class="panel" style="font-size:24px;line-height:1.6">아이 이름이 아직 없어요.<br>부모방에서 이름을 넣어 주세요.<br><br>' +
+          '<a class="big-btn" href="parent.html">⚙️ 부모방 가기</a></div>';
+        return;
+      }
+      document.getElementById('name').innerHTML = [...name].map(c => '<span>' + c + '</span>').join('');
+      document.getElementById('nameCard').onclick = readName;
+      await startCover('📛');
+      await readName();
+      ask();
+    })();
+  </script>
+</body>
+</html>

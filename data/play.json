@@ -1,0 +1,166 @@
+{
+ "chains": [
+  [
+   "apple",
+   "cookie",
+   "bike",
+   "turtle",
+   "tooth"
+  ],
+  [
+   "butterfly",
+   "airplane",
+   "giraffe"
+  ],
+  [
+   "sweetpotato",
+   "mask",
+   "crayon",
+   "ski",
+   "kiwi"
+  ]
+ ],
+ "firstPairs": [
+  [
+   "bag",
+   "scissors"
+  ],
+  [
+   "banana",
+   "sea"
+  ],
+  [
+   "lion",
+   "apple"
+  ],
+  [
+   "duck",
+   "cucumber"
+  ],
+  [
+   "rabbit",
+   "tomato"
+  ],
+  [
+   "cat",
+   "sweetpotato"
+  ],
+  [
+   "butterfly",
+   "tree"
+  ],
+  [
+   "grape",
+   "fork"
+  ]
+ ],
+ "clapWords": [
+  "dog",
+  "apple",
+  "banana",
+  "grandpa",
+  "ship",
+  "train",
+  "cat",
+  "sun",
+  "car",
+  "watermelon"
+ ],
+ "finals": {
+  "ㅇ": "응",
+  "ㄴ": "은",
+  "ㅁ": "음",
+  "ㄹ": "을",
+  "ㄱ": "윽",
+  "ㅂ": "읍"
+ },
+ "sentences": {
+  "6-1": [
+   {
+    "text": "엄마 사랑해",
+    "emoji": "👩❤️"
+   },
+   {
+    "text": "아빠 고마워",
+    "emoji": "👨🙏"
+   },
+   {
+    "text": "할머니 안녕",
+    "emoji": "👵👋"
+   }
+  ],
+  "6-2": [
+   {
+    "text": "기차가 가요",
+    "emoji": "🚂"
+   },
+   {
+    "text": "비행기가 날아요",
+    "emoji": "✈️"
+   },
+   {
+    "text": "토끼가 뛰어요",
+    "emoji": "🐰"
+   },
+   {
+    "text": "오리가 헤엄쳐요",
+    "emoji": "🦆"
+   }
+  ],
+  "6-3": [
+   {
+    "text": "곰이 잠을 자요",
+    "emoji": "🐻😴"
+   },
+   {
+    "text": "달이 떴어요",
+    "emoji": "🌙"
+   },
+   {
+    "text": "나비가 꽃에 앉았어요",
+    "emoji": "🦋🌸"
+   },
+   {
+    "text": "강아지가 멍멍 짖어요",
+    "emoji": "🐶"
+   }
+  ]
+ },
+ "stages": [
+  {
+   "n": 0,
+   "name": "말소리 놀이",
+   "icon": "👂"
+  },
+  {
+   "n": 1,
+   "name": "그림 글자",
+   "icon": "🍎"
+  },
+  {
+   "n": 2,
+   "name": "모음 친구",
+   "icon": "ㅏ"
+  },
+  {
+   "n": 3,
+   "name": "자음 친구",
+   "icon": "ㄱ"
+  },
+  {
+   "n": 4,
+   "name": "글자 블록",
+   "icon": "가"
+  },
+  {
+   "n": 5,
+   "name": "받침 글자",
+   "icon": "공"
+  },
+  {
+   "n": 6,
+   "name": "짧은 문장",
+   "icon": "📖"
+  }
+ ]
+}

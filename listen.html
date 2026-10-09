@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>말소리 놀이</title>
+</head>
+<body>
+  <div id="topbar"></div>
+  <main class="stage-area">
+    <div class="progress-stars" id="stars"></div>
+    <div class="question" id="question"></div>
+    <div class="hint-text" id="hint"></div>
+    <div id="answers" style="width:100%;display:flex;justify-content:center"></div>
+    <div id="after"></div>
+  </main>
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/hangul.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    const unit = param('unit') || '0-1';
+    const mode = param('mode') || 'chain';
+    let byId = {}, all = [], rounds = [], qn = 0, locked = false;
+
+    const first = w => w.word[0];
+    const last = w => w.word[w.word.length - 1];
+
+    function stars() {
+      document.getElementById('stars').textContent = '⭐'.repeat(qn) + '☆'.repeat(rounds.length - qn);
+    }
+
+    function pictureChoices(options, isRight) {
+      const box = document.getElementById('answers');
+      box.innerHTML = '<div class="choices">' + options.map(o =>
+        `<button class="choice" data-id="${o.id}">${o.emoji}</button>`).join('') + '</div>';
+      box.querySelectorAll('.choice').forEach(b => b.onclick = () => {
+        if (locked) return;
+        const w = byId[b.dataset.id];
+        if (isRight(w)) { locked = true; b.classList.add('right'); right(w); }
+        else { wrong(b); Speak.say(w); }
+      });
+    }
+
+    async function right(w) {
+      celebrate();
+      await Speak.tts(praise());
+      if (w) await Speak.say(w);
+      qn++;
+      await sleep(400);
+      if (qn >= rounds.length) return done();
+      ask();
+    }
+
+    function done() {
+      stars();
+      document.getElementById('question').innerHTML = '<span>🎉</span>';
+      document.getElementById('answers').innerHTML = '';
+      document.getElementById('hint').textContent = '';
+      finishActivity(mode + '-' + unit, document.getElementById('after'));
+    }
+
+    function others(exclude, n) {
+      return shuffle(all.filter(exclude)).slice(0, n);
+    }
+
+    // ---- 끝말 잇기: 앞 단어의 끝 글자로 시작하는 그림 고르기
+    function askChain() {
+      const [cur, next] = rounds[qn];
+      const key = last(cur);
+      document.getElementById('question').innerHTML =
+        `<span style="font-size:min(20vw,110px)">${cur.emoji}</span><span>${cur.word.slice(0, -1)}<b style="color:#e5533d">${key}</b></span>`;
+      document.getElementById('hint').textContent = `'${key}' 소리로 시작하는 말은?`;
+      Speak.say(cur).then(() => Speak.tts(`${key} 소리로 시작하는 말은 뭘까?`));
+      pictureChoices(shuffle([next, ...others(w => first(w) !== key && w.id !== cur.id, 2)]), w => first(w) === key);
+    }
+
+    // ---- 첫소리 같은 말
+    function askFirst() {
+      const [target, answer] = rounds[qn];
+      document.getElementById('question').innerHTML = `<span style="font-size:min(20vw,110px)">${target.emoji}</span><span>${target.word}</span>`;
+      document.getElementById('hint').textContent = '처음 소리가 같은 친구는?';
+      Speak.say(target).then(() => Speak.tts(`${first(target)}! 처음 소리가 같은 친구를 찾아 볼까?`));
+      pictureChoices(shuffle([answer, ...others(w => first(w) !== first(target), 2)]), w => w.id !== target.id && first(w) === first(target));
+    }
+
+    // ---- 손뼉: 글자 수 세기
+    async function sayClaps(w) {
+      const spans = document.querySelectorAll('#question .word span');
+      for (const s of spans) {
+        s.classList.add('on');
+        await Speak.tts(s.textContent, 0.7);
+        s.classList.remove('on');
+      }
+    }
+    function askClap() {
+      const w = rounds[qn];
+      document.getElementById('question').innerHTML =
+        `<span style="font-size:min(20vw,110px)">${w.emoji}</span><button class="icon-btn" id="replay">🔊</button>
+         <span class="word">${[...w.word].map(c => '<span>' + c + '</span>').join('')}</span>`;
+      document.getElementById('hint').textContent = '손뼉을 몇 번 칠까?';
+      document.getElementById('replay').onclick = () => sayClaps(w);
+      Speak.say(w).then(() => Speak.tts('손뼉을 몇 번 칠까?'));
+      const box = document.getElementById('answers');
+      box.innerHTML = '<div class="clap-row">' + [1, 2, 3, 4].map(n =>
+        `<button class="clap-btn" data-n="${n}"><span>${'👏'.repeat(n)}</span>${n}번</button>`).join('') + '</div>';
+      box.querySelectorAll('.clap-btn').forEach(b => b.onclick = async () => {
+        if (locked) return;
+        if (Number(b.dataset.n) === w.word.length) {
+          locked = true;
+          b.style.background = 'var(--s1)';
+          await sayClaps(w);
+          right(null);
+        } else wrong(b);
+      });
+    }
+
+    function ask() {
+      locked = false;
+      stars();
+      ({ chain: askChain, first: askFirst, clap: askClap })[mode]();
+    }
+
+    (async () => {
+      all = await loadJSON('data/words.json');
+      all.forEach(w => byId[w.id] = w);
+      const play = await loadJSON('data/play.json');
+      const u = await getUnit(unit);
+      topbar(unitTitle(u));
+      if (mode === 'chain') {
+        const chain = play.chains[Math.floor(Math.random() * play.chains.length)].map(id => byId[id]);
+        rounds = chain.slice(0, -1).map((w, i) => [w, chain[i + 1]]);
+      } else if (mode === 'first') {
+        rounds = shuffle(play.firstPairs).slice(0, 5).map(p => p.map(id => byId[id]));
+      } else {
+        rounds = shuffle(play.clapWords).slice(0, 5).map(id => byId[id]);
+      }
+      // 보기는 그림이 분명한 단어 중에서
+      all = all.filter(w => w.unit !== 'ex' || play.chains.flat().includes(w.id) || play.firstPairs.flat().includes(w.id));
+      await startCover(u.icon);
+      ask();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>통글자 쪼개기</title>
+</head>
+<body>
+  <div id="topbar"></div>
+  <main class="stage-area">
+    <div class="progress-stars" id="stars"></div>
+    <div class="huge" id="pic"></div>
+    <div class="hint-text">글자를 눌러서 쪼개 봐요!</div>
+    <div class="syls" id="syls"></div>
+    <div class="nav"><button class="icon-btn" id="next" aria-label="다음">▶️</button></div>
+    <div id="after"></div>
+  </main>
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/hangul.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    const ROUNDS = 5;
+    let words = [], idx = 0, opened = new Set(), J = {};
+    const COLORS = { c: '#ffe0c2', v: '#fff0b3', f: '#e6dcff' };
+
+    function show() {
+      const w = words[idx];
+      opened = new Set();
+      document.getElementById('stars').textContent = '⭐'.repeat(idx) + '☆'.repeat(ROUNDS - idx);
+      document.getElementById('pic').textContent = w.emoji;
+      document.getElementById('syls').innerHTML = [...w.word].map((s, i) =>
+        `<button class="syl" data-i="${i}"><div>${s}</div><div class="parts"></div></button>`).join('');
+      document.querySelectorAll('.syl').forEach(b => b.onclick = () => open(b));
+      document.getElementById('next').style.visibility = 'hidden';
+      Speak.say(w);
+    }
+
+    async function open(b) {
+      const s = b.firstElementChild.textContent, d = Hangul.decompose(s);
+      const parts = [['c', d.cho], ...(Hangul.SPLIT_VOWEL[d.jung] || [d.jung]).map(v => ['v', v])];
+      if (d.jong) parts.push(['f', d.jong]);
+      b.querySelector('.parts').innerHTML = parts.map(([k, j]) => `<span class="part" style="background:${COLORS[k]}">${j}</span>`).join('');
+      for (const [, j] of parts) await Speak.tts(J[j] ? J[j].say : j);
+      await Speak.tts(s, 0.7);
+      opened.add(b.dataset.i);
+      if (opened.size === words[idx].word.length) {
+        celebrate();
+        document.getElementById('next').style.visibility = 'visible';
+      }
+    }
+
+    document.getElementById('next').onclick = () => {
+      idx++;
+      if (idx >= ROUNDS) {
+        document.getElementById('stars').textContent = '⭐'.repeat(ROUNDS);
+        document.getElementById('syls').innerHTML = '';
+        document.getElementById('pic').textContent = '🎉';
+        document.getElementById('next').style.visibility = 'hidden';
+        return finishActivity('split', document.getElementById('after'));
+      }
+      show();
+    };
+
+    (async () => {
+      const u = await getUnit('4-3');
+      topbar(unitTitle(u));
+      (await loadJSON('data/jamo.json')).forEach(j => J[j.j] = j);
+      const all = await loadJSON('data/words.json');
+      words = shuffle(all.filter(w => w.stage === 1 && w.word.length >= 2)).slice(0, ROUNDS);
+      await startCover('✂️');
+      show();
+    })();
+  </script>
+</body>
+</html>

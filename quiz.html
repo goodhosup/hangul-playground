@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>소리 퀴즈</title>
+</head>
+<body>
+  <div id="topbar"></div>
+  <main class="stage-area">
+    <div class="progress-stars" id="stars"></div>
+    <div class="question" id="question"></div>
+    <div class="hint-text" id="hint"></div>
+    <div class="jamo-row" id="choices"></div>
+    <div id="after"></div>
+  </main>
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/hangul.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/jamo.js"></script>
+  <script>
+    const ROUNDS = 6;
+    const unit = param('unit') || '2-1';
+    let J, u, pool = [], qn = 0, locked = false, order = [];
+
+    function ask() {
+      locked = false;
+      document.getElementById('stars').textContent = '⭐'.repeat(qn) + '☆'.repeat(ROUNDS - qn);
+      const target = order[qn % order.length];
+      const info = J.byJ[target];
+      const isVowel = info.type === 'vowel';
+      const q = document.getElementById('question');
+      let say;
+      // 짝수 문제: 소리 듣고 글자 고르기 / 홀수 문제: 그림 단어의 첫소리 고르기
+      const ex = info.examples.map(id => J.byId[id]).find(w => (isVowel ? Jamo.firstJung(w.word) : Jamo.firstCho(w.word)) === target);
+      if (qn % 2 === 0 || !ex) {
+        q.innerHTML = '<button class="icon-btn" id="replay" style="width:110px;height:110px;font-size:56px">🔊</button>';
+        document.getElementById('hint').textContent = '어떤 글자일까?';
+        say = () => Speak.tts(info.say);
+        Speak.tts('어떤 글자일까?').then(say);
+      } else {
+        q.innerHTML = `<span style="font-size:min(20vw,110px)">${ex.emoji}</span><span>${ex.word}</span><button class="icon-btn" id="replay">🔊</button>`;
+        document.getElementById('hint').textContent = `'${ex.word[0]}'에 숨은 ${isVowel ? '모음' : '자음'}은?`;
+        say = () => Speak.say(ex);
+        say().then(() => Speak.tts(ex.word[0] + '에 숨은 친구는 누구일까?'));
+      }
+      document.getElementById('replay').onclick = say;
+      const others = shuffle(pool.filter(j => j !== target && J.byJ[j].type === info.type)).slice(0, 2);
+      const c = document.getElementById('choices');
+      c.innerHTML = shuffle([target, ...others]).map(j => `<button class="jamo-btn" data-j="${j}">${j}</button>`).join('');
+      c.querySelectorAll('.jamo-btn').forEach(b => b.onclick = async () => {
+        if (locked) return;
+        if (b.dataset.j === target) {
+          locked = true; b.classList.add('on'); celebrate();
+          await Speak.tts(praise());
+          await Speak.tts(info.say);
+          qn++;
+          if (qn >= ROUNDS) {
+            q.innerHTML = '<span>🎉</span>'; c.innerHTML = ''; document.getElementById('hint').textContent = '';
+            return finishActivity('quiz-' + unit, document.getElementById('after'));
+          }
+          ask();
+        } else { wrong(b); Speak.tts(J.byJ[b.dataset.j].say); }
+      });
+    }
+
+    (async () => {
+      J = await Jamo.load();
+      u = await getUnit(unit);
+      topbar(unitTitle(u));
+      // 보기에는 이 단원 자모 + 이미 배운 같은 종류 자모를 섞는다
+      const type = J.byJ[u.jamo[0]].type;
+      const sameType = J.jamo.filter(j => j.type === type).map(j => j.j);
+      const learned = sameType.slice(0, Math.max(...u.jamo.map(j => sameType.indexOf(j))) + 1);
+      pool = learned.length >= 3 ? learned : sameType.slice(0, 3);
+      order = shuffle([].concat(u.jamo, u.jamo, u.jamo)).slice(0, ROUNDS);
+      while (order.length < ROUNDS) order.push(u.jamo[order.length % u.jamo.length]);
+      await startCover('❓');
+      ask();
+    })();
+  </script>
+</body>
+</html>

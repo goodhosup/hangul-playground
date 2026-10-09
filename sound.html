@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>소리 버튼</title>
+</head>
+<body>
+  <div id="topbar"></div>
+  <main class="stage-area">
+    <div class="jamo-row" id="row"></div>
+    <div class="hint-text" id="shape"></div>
+    <div class="examples" id="examples"></div>
+  </main>
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/hangul.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/jamo.js"></script>
+  <script>
+    const unit = param('unit') || '2-1';
+    let J, u, tapped = new Set();
+
+    function pick(j) {
+      document.querySelectorAll('.jamo-btn').forEach(b => b.classList.toggle('on', b.dataset.j === j));
+      const info = J.byJ[j];
+      document.getElementById('shape').textContent = info.shape + (info.hint ? ' · ' + info.hint : '');
+      const exs = info.examples.map(id => J.byId[id]);
+      document.getElementById('examples').innerHTML = exs.map(w =>
+        `<button class="example" data-id="${w.id}"><div class="e">${w.emoji}</div><div class="w">${Jamo.highlight(w.word, j)}</div></button>`).join('');
+      document.querySelectorAll('.example').forEach(b => b.onclick = () => Speak.say(J.byId[b.dataset.id]));
+      Speak.tts(info.say).then(() => info.hint ? Speak.tts(info.hint.replace(/'/g, '')) : null);
+      tapped.add(j);
+      if (tapped.size === u.jamo.length && Progress.reward('sound-' + unit)) setTimeout(showStickerToast, 1500);
+    }
+
+    (async () => {
+      J = await Jamo.load();
+      u = await getUnit(unit);
+      topbar(unitTitle(u));
+      const small = u.jamo.length > 4;
+      document.getElementById('row').innerHTML = u.jamo.map(j =>
+        `<button class="jamo-btn ${small ? 'small' : ''}" data-j="${j}">${j}</button>`).join('');
+      document.querySelectorAll('.jamo-btn').forEach(b => b.onclick = () => pick(b.dataset.j));
+      document.getElementById('shape').textContent = '글자를 눌러 소리를 들어 봐요';
+    })();
+  </script>
+</body>
+</html>

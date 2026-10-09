@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>글자 블록</title>
+</head>
+<body>
+  <div id="topbar"></div>
+  <main class="stage-area">
+    <div class="progress-stars" id="stars"></div>
+    <div class="question" id="target"></div>
+    <div class="slots">
+      <div class="slot-box c" id="sc"></div><span>+</span>
+      <div class="slot-box v" id="sv"></div>
+      <span id="plusF">+</span><div class="slot-box f" id="sf"></div>
+      <span>=</span><div class="result-box" id="result">?</div>
+    </div>
+    <div>
+      <div class="tray" id="trayC"></div><div class="tray-label">자음</div>
+    </div>
+    <div>
+      <div class="tray" id="trayV"></div><div class="tray-label">모음</div>
+    </div>
+    <div id="fwrap">
+      <div class="tray" id="trayF"></div><div class="tray-label">받침</div>
+    </div>
+    <div id="after"></div>
+  </main>
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/hangul.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    const unit = param('unit') || '4-1';
+    const quiz = param('quiz') === '1';
+    const ROUNDS = 5;
+    let cfg, pick = { c: '', v: '', f: '' }, made = new Set(), target = null, qn = 0, J = {}, busy = false;
+
+    function nameOf(j) { return J[j] ? J[j].say : j; }
+
+    function render() {
+      ['c', 'v', 'f'].forEach(k => {
+        const el = document.getElementById('s' + k);
+        el.textContent = pick[k];
+        el.classList.toggle('filled', !!pick[k]);
+      });
+      document.querySelectorAll('.block').forEach(b => b.classList.toggle('sel', pick[b.dataset.k] === b.dataset.j));
+      const syl = pick.c && pick.v ? Hangul.compose(pick.c, pick.v, pick.f) : null;
+      document.getElementById('result').textContent = syl || '?';
+      return syl;
+    }
+
+    async function choose(k, j) {
+      if (busy) return;
+      pick[k] = pick[k] === j ? '' : j;
+      const syl = render();
+      if (!pick[k]) return;
+      busy = true;
+      await Speak.tts(nameOf(j));
+      if (syl) {
+        await Speak.tts(syl, 0.7);
+        if (quiz) await checkQuiz(syl);
+        else {
+          made.add(syl);
+          if (made.size === 8 && Progress.reward('blocks-' + unit)) showStickerToast();
+        }
+      }
+      busy = false;
+    }
+
+    function newTarget() {
+      const c = cfg.cons[Math.floor(Math.random() * cfg.cons.length)];
+      const v = cfg.vows[Math.floor(Math.random() * cfg.vows.length)];
+      const f = cfg.fins.length && Math.random() < 0.7 ? cfg.fins[Math.floor(Math.random() * cfg.fins.length)] : '';
+      target = Hangul.compose(c, v, f);
+      document.getElementById('stars').textContent = '⭐'.repeat(qn) + '☆'.repeat(ROUNDS - qn);
+      document.getElementById('target').innerHTML =
+        `<button class="icon-btn" id="replay" style="width:100px;height:100px;font-size:50px">🔊</button><span id="peek" style="color:var(--muted)"></span>`;
+      document.getElementById('replay').onclick = () => Speak.tts(target, 0.7);
+      pick = { c: '', v: '', f: '' };
+      render();
+      Speak.tts('이 글자를 만들어 볼까?').then(() => Speak.tts(target, 0.7));
+    }
+
+    async function checkQuiz(syl) {
+      if (syl === target) {
+        celebrate();
+        await Speak.tts(praise());
+        qn++;
+        if (qn >= ROUNDS) {
+          document.getElementById('stars').textContent = '⭐'.repeat(ROUNDS);
+          document.getElementById('target').innerHTML = '<span>🎉</span>';
+          return finishActivity('blockquiz-' + unit, document.getElementById('after'));
+        }
+        await sleep(500);
+        newTarget();
+      } else {
+        const d = Hangul.decompose(target);
+        // 자음·모음이 다 들어갔는데 다르면 글자를 살짝 보여 준다
+        if (pick.c && pick.v && (!d.jong || pick.f)) {
+          document.getElementById('peek').textContent = target;
+          await Speak.tts('이건 ' + syl + '. 다시 해볼까?');
+        }
+      }
+    }
+
+    function tray(id, list, k) {
+      document.getElementById(id).innerHTML = list.map(j => `<button class="block ${k}" data-k="${k}" data-j="${j}">${j}</button>`).join('');
+    }
+
+    // 블록 칸을 누르면 비우고, 결과를 누르면 다시 읽기
+    ['c', 'v', 'f'].forEach(k => document.getElementById('s' + k).onclick = () => { pick[k] = ''; render(); });
+    document.getElementById('result').onclick = () => { const s = render(); if (s) Speak.tts(s, 0.7); };
+
+    (async () => {
+      const u = await getUnit(unit);
+      topbar(unitTitle(u) + (quiz ? ' · 퀴즈' : ''));
+      (await loadJSON('data/jamo.json')).forEach(j => J[j.j] = j);
+      cfg = u.blocks;
+      tray('trayC', cfg.cons, 'c'); tray('trayV', cfg.vows, 'v'); tray('trayF', cfg.fins, 'f');
+      if (!cfg.fins.length) ['fwrap', 'sf', 'plusF'].forEach(id => document.getElementById(id).style.display = 'none');
+      document.querySelectorAll('.block').forEach(b => b.onclick = () => choose(b.dataset.k, b.dataset.j));
+      if (quiz) { await startCover('🏆'); newTarget(); }
+      else document.getElementById('target').innerHTML = '<span class="hint-text">블록을 골라 글자를 만들어 봐요</span>';
+    })();
+  </script>
+</body>
+</html>

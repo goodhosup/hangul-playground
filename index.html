@@ -19,12 +19,9 @@
 
   <main>
     <div class="hello" id="hello">안녕! 오늘은 뭐 하고 놀까?</div>
-
-    <div class="section-title">🌱 1단계 · 그림 글자</div>
-    <div class="units" id="units"></div>
-
-    <div class="section-title">🗺️ 놀이터 지도</div>
     <div class="islands" id="islands"></div>
+    <div class="section-title" id="stageTitle"></div>
+    <div class="units" id="units"></div>
   </main>
 
   <div class="footer">하루 10분, 엄마·아빠와 함께 놀아요</div>
@@ -33,43 +30,47 @@
   <script src="js/speak.js"></script>
   <script src="js/common.js"></script>
   <script>
-    const STAGES = [
-      { n: 0, name: '말소리 놀이', icon: '👂', color: 'var(--s0)' },
-      { n: 1, name: '그림 글자',   icon: '🍎', color: 'var(--s1)' },
-      { n: 2, name: '모음 친구',   icon: 'ㅏ', color: 'var(--s2)' },
-      { n: 3, name: '자음 친구',   icon: 'ㄱ', color: 'var(--s3)' },
-      { n: 4, name: '글자 블록',   icon: '가', color: 'var(--s4)' },
-      { n: 5, name: '받침 글자',   icon: '공', color: 'var(--s5)' },
-      { n: 6, name: '짧은 문장',   icon: '📖', color: 'var(--s6)' }
-    ];
-    // 지금 만들어진 단계 (나머지는 다음 버전에서 열림)
-    const READY = [1];
+    const COLORS = ['var(--s0)', 'var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)', 'var(--s5)', 'var(--s6)'];
+    let units = [], stages = [];
+
+    function renderStage(n) {
+      const s = stages[n];
+      Progress.update(p => { p.lastStage = n; });
+      document.querySelectorAll('.island').forEach(el => el.classList.toggle('selected', Number(el.dataset.n) === n));
+      document.getElementById('stageTitle').textContent = s.icon + ' ' + n + '단계 · ' + s.name;
+      document.getElementById('units').innerHTML = units.filter(u => u.stage === n).map(u => `
+        <div class="unit" style="border-top: 10px solid ${COLORS[n]}">
+          <div class="big">${u.icon}</div>
+          <div class="name"><small>${u.unit}</small> ${u.title}</div>
+          <div class="acts">
+            ${u.acts.map(a => `<a class="icon-btn act" href="${actHref(a, u.unit)}" aria-label="${ACTS[a].label}">
+              <span>${ACTS[a].icon}</span><small>${ACTS[a].label}</small></a>`).join('')}
+          </div>
+        </div>`).join('');
+    }
 
     (async () => {
       const p = Progress.get();
       if (p.childName) {
         document.getElementById('hello').textContent = '안녕, ' + p.childName + '! 오늘은 뭐 하고 놀까?';
       }
+      const play = await loadJSON('data/play.json');
+      stages = play.stages;
+      units = await loadJSON('data/units.json');
 
-      const units = await loadJSON('data/units.json');
-      document.getElementById('units').innerHTML = units.map(u => `
-        <div class="unit">
-          <div class="big">${u.icon}</div>
-          <div class="name">${u.title}</div>
-          <div class="acts">
-            <a class="icon-btn" href="cards.html?unit=${u.unit}" aria-label="그림 카드">🃏</a>
-            <a class="icon-btn" href="match.html?unit=${u.unit}" aria-label="짝 맞추기">🎯</a>
-          </div>
-        </div>`).join('');
-
-      document.getElementById('islands').innerHTML = STAGES.map(s => {
-        const open = READY.includes(s.n);
-        return `<div class="island ${open ? '' : 'locked'}" style="background:${s.color}">
-          <div class="big">${open ? s.icon : '🔒'}</div>
-          <div>${s.n}단계</div>
-          <small>${s.name}${open ? '' : ' · 곧 열려요'}</small>
-        </div>`;
+      document.getElementById('islands').innerHTML = stages.map(s => {
+        const open = s.n <= p.unlockedStage;
+        return `<button class="island ${open ? '' : 'locked'}" data-n="${s.n}" style="background:${COLORS[s.n]}" ${open ? '' : 'disabled'}>
+          <span class="big">${open ? s.icon : '🔒'}</span>
+          <span>${s.n}단계</span>
+          <small>${s.name}</small>
+        </button>`;
       }).join('');
+      document.querySelectorAll('.island:not(.locked)').forEach(el => {
+        el.onclick = () => { renderStage(Number(el.dataset.n)); Speak.tts(stages[el.dataset.n].name); };
+      });
+
+      renderStage(Math.min(p.lastStage, p.unlockedStage));
     })();
   </script>
 </body>

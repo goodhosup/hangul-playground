@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#fff8ec">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>가</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <title>손가락 따라 쓰기</title>
+</head>
+<body>
+  <div id="topbar"></div>
+  <main class="stage-area">
+    <div class="jamo-row" id="tabs"></div>
+    <div class="trace-wrap">
+      <canvas class="bg" id="bg"></canvas>
+      <canvas id="draw"></canvas>
+    </div>
+    <div class="meter"><div id="meter"></div></div>
+    <div class="nav">
+      <button class="icon-btn" id="clear" aria-label="지우기">🧽</button>
+      <button class="icon-btn" id="say" aria-label="소리">🔊</button>
+    </div>
+    <div id="after"></div>
+  </main>
+  <script src="js/progress.js"></script>
+  <script src="js/speak.js"></script>
+  <script src="js/hangul.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    const unit = param('unit') || '2-1';
+    const GOAL = 0.6;  // 글자 면적의 60%를 덮으면 성공
+    let letters = [], idx = 0, done = new Set(), mask = null, maskCount = 0, drawing = false, last = null, solved = false, J = {};
+    const bg = document.getElementById('bg'), dr = document.getElementById('draw');
+    const bctx = bg.getContext('2d'), dctx = dr.getContext('2d');
+    const FONT = '"Gowun Dodum", "Nanum Gothic", sans-serif';
+
+    function size() {
+      const r = bg.getBoundingClientRect();
+      const s = Math.round(r.width * (window.devicePixelRatio || 1));
+      [bg, dr].forEach(c => { c.width = s; c.height = s; });
+      return s;
+    }
+
+    function drawGlyph(ctx, s, style) {
+      ctx.font = `${Math.round(s * 0.78)}px ${FONT}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      style(ctx, letters[idx], s / 2, s * 0.53);
+    }
+
+    function setup() {
+      const s = size();
+      solved = false;
+      document.getElementById('meter').style.width = '0';
+      // 배경: 연한 글자 + 점선 테두리
+      bctx.clearRect(0, 0, s, s);
+      drawGlyph(bctx, s, (c, t, x, y) => {
+        c.fillStyle = '#efe6d8'; c.fillText(t, x, y);
+        c.setLineDash([s / 60, s / 60]); c.lineWidth = s / 160; c.strokeStyle = '#b9a99a'; c.strokeText(t, x, y);
+      });
+      // 판정용 마스크
+      const off = document.createElement('canvas'); off.width = s; off.height = s;
+      const octx = off.getContext('2d');
+      drawGlyph(octx, s, (c, t, x, y) => { c.fillStyle = '#000'; c.fillText(t, x, y); });
+      const data = octx.getImageData(0, 0, s, s).data;
+      mask = new Uint8Array(s * s); maskCount = 0;
+      for (let i = 0; i < s * s; i++) if (data[i * 4 + 3] > 128) { mask[i] = 1; maskCount++; }
+      dctx.clearRect(0, 0, s, s);
+      dctx.lineCap = 'round'; dctx.lineJoin = 'round';
+      dctx.lineWidth = s / 11; dctx.strokeStyle = 'rgba(126, 212, 146, 0.85)';
+      document.querySelectorAll('#tabs .jamo-btn').forEach((b, i) => b.classList.toggle('on', i === idx));
+    }
+
+    function pos(e) {
+      const r = dr.getBoundingClientRect(), k = dr.width / r.width;
+      return [(e.clientX - r.left) * k, (e.clientY - r.top) * k];
+    }
+
+    function check() {
+      const s = dr.width, d = dctx.getImageData(0, 0, s, s).data;
+      let hitN = 0;
+      for (let i = 0; i < s * s; i += 2) if (mask[i] && d[i * 4 + 3] > 0) hitN++;
+      const ratio = (hitN * 2) / maskCount;
+      document.getElementById('meter').style.width = Math.min(100, ratio / GOAL * 100) + '%';
+      if (!solved && ratio >= GOAL) success();
+    }
+
+    async function success() {
+      solved = true;
+      done.add(idx);
+      celebrate();
+      await Speak.tts(praise());
+      await sayLetter();
+      if (done.size === letters.length) return finishActivity('trace-' + unit, document.getElementById('after'));
+      idx = (idx + 1) % letters.length;
+      setup();
+    }
+
+    function sayLetter() {
+      const j = J[letters[idx]];
+      return Speak.tts(j ? j.say : letters[idx]);
+    }
+
+    dr.addEventListener('pointerdown', e => { drawing = true; last = pos(e); dr.setPointerCapture(e.pointerId); dot(last); });
+    dr.addEventListener('pointermove', e => {
+      if (!drawing) return;
+      const p = pos(e);
+      dctx.beginPath(); dctx.moveTo(...last); dctx.lineTo(...p); dctx.stroke();
+      last = p;
+    });
+    ['pointerup', 'pointercancel'].forEach(t => dr.addEventListener(t, () => { if (drawing) { drawing = false; check(); } }));
+    function dot(p) { dctx.beginPath(); dctx.arc(p[0], p[1], dctx.lineWidth / 2, 0, Math.PI * 2); dctx.fillStyle = dctx.strokeStyle; dctx.fill(); }
+
+    document.getElementById('clear').onclick = setup;
+    document.getElementById('say').onclick = sayLetter;
+    window.addEventListener('resize', setup);
+
+    (async () => {
+      const u = await getUnit(unit);
+      topbar(unitTitle(u));
+      (await loadJSON('data/jamo.json')).forEach(j => J[j.j] = j);
+      letters = u.jamo || [...(param('letters') || '가')];
+      document.getElementById('tabs').innerHTML = letters.map((l, i) => `<button class="jamo-btn small" data-i="${i}">${l}</button>`).join('');
+      document.querySelectorAll('#tabs .jamo-btn').forEach(b => b.onclick = () => { idx = Number(b.dataset.i); setup(); sayLetter(); });
+      await document.fonts.ready;
+      setup();
+    })();
+  </script>
+</body>
+</html>

@@ -1,22 +1,802 @@
 [
-  { "id": "apple",      "word": "사과",     "emoji": "🍎", "unit": "1-1", "stage": 1, "audio": null, "tags": ["과일"] },
-  { "id": "banana",     "word": "바나나",   "emoji": "🍌", "unit": "1-1", "stage": 1, "audio": null, "tags": ["과일"] },
-  { "id": "grape",      "word": "포도",     "emoji": "🍇", "unit": "1-1", "stage": 1, "audio": null, "tags": ["과일"] },
-  { "id": "strawberry", "word": "딸기",     "emoji": "🍓", "unit": "1-1", "stage": 1, "audio": null, "tags": ["과일"] },
-  { "id": "watermelon", "word": "수박",     "emoji": "🍉", "unit": "1-1", "stage": 1, "audio": null, "tags": ["과일"] },
-  { "id": "dog",        "word": "개",       "emoji": "🐶", "unit": "1-2", "stage": 1, "audio": null, "tags": ["동물"] },
-  { "id": "cat",        "word": "고양이",   "emoji": "🐱", "unit": "1-2", "stage": 1, "audio": null, "tags": ["동물"] },
-  { "id": "rabbit",     "word": "토끼",     "emoji": "🐰", "unit": "1-2", "stage": 1, "audio": null, "tags": ["동물"] },
-  { "id": "lion",       "word": "사자",     "emoji": "🦁", "unit": "1-2", "stage": 1, "audio": null, "tags": ["동물"] },
-  { "id": "duck",       "word": "오리",     "emoji": "🦆", "unit": "1-2", "stage": 1, "audio": null, "tags": ["동물"] },
-  { "id": "train",      "word": "기차",     "emoji": "🚂", "unit": "1-3", "stage": 1, "audio": null, "tags": ["탈것"] },
-  { "id": "bus",        "word": "버스",     "emoji": "🚌", "unit": "1-3", "stage": 1, "audio": null, "tags": ["탈것"] },
-  { "id": "car",        "word": "자동차",   "emoji": "🚗", "unit": "1-3", "stage": 1, "audio": null, "tags": ["탈것"] },
-  { "id": "ship",       "word": "배",       "emoji": "🚢", "unit": "1-3", "stage": 1, "audio": null, "tags": ["탈것"] },
-  { "id": "airplane",   "word": "비행기",   "emoji": "✈️", "unit": "1-3", "stage": 1, "audio": null, "tags": ["탈것"] },
-  { "id": "mom",        "word": "엄마",     "emoji": "👩", "unit": "1-4", "stage": 1, "audio": null, "tags": ["가족"] },
-  { "id": "dad",        "word": "아빠",     "emoji": "👨", "unit": "1-4", "stage": 1, "audio": null, "tags": ["가족"] },
-  { "id": "baby",       "word": "아기",     "emoji": "👶", "unit": "1-4", "stage": 1, "audio": null, "tags": ["가족"] },
-  { "id": "grandma",    "word": "할머니",   "emoji": "👵", "unit": "1-4", "stage": 1, "audio": null, "tags": ["가족"] },
-  { "id": "grandpa",    "word": "할아버지", "emoji": "👴", "unit": "1-4", "stage": 1, "audio": null, "tags": ["가족"] }
+ {
+  "id": "apple",
+  "word": "사과",
+  "emoji": "🍎",
+  "unit": "1-1",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "banana",
+  "word": "바나나",
+  "emoji": "🍌",
+  "unit": "1-1",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "grape",
+  "word": "포도",
+  "emoji": "🍇",
+  "unit": "1-1",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "strawberry",
+  "word": "딸기",
+  "emoji": "🍓",
+  "unit": "1-1",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "watermelon",
+  "word": "수박",
+  "emoji": "🍉",
+  "unit": "1-1",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "dog",
+  "word": "개",
+  "emoji": "🐶",
+  "unit": "1-2",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "cat",
+  "word": "고양이",
+  "emoji": "🐱",
+  "unit": "1-2",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "rabbit",
+  "word": "토끼",
+  "emoji": "🐰",
+  "unit": "1-2",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "lion",
+  "word": "사자",
+  "emoji": "🦁",
+  "unit": "1-2",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "duck",
+  "word": "오리",
+  "emoji": "🦆",
+  "unit": "1-2",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "train",
+  "word": "기차",
+  "emoji": "🚂",
+  "unit": "1-3",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "bus",
+  "word": "버스",
+  "emoji": "🚌",
+  "unit": "1-3",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "car",
+  "word": "자동차",
+  "emoji": "🚗",
+  "unit": "1-3",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "ship",
+  "word": "배",
+  "emoji": "🚢",
+  "unit": "1-3",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "airplane",
+  "word": "비행기",
+  "emoji": "✈️",
+  "unit": "1-3",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "mom",
+  "word": "엄마",
+  "emoji": "👩",
+  "unit": "1-4",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "dad",
+  "word": "아빠",
+  "emoji": "👨",
+  "unit": "1-4",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "baby",
+  "word": "아기",
+  "emoji": "👶",
+  "unit": "1-4",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "grandma",
+  "word": "할머니",
+  "emoji": "👵",
+  "unit": "1-4",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "grandpa",
+  "word": "할아버지",
+  "emoji": "👴",
+  "unit": "1-4",
+  "stage": 1,
+  "audio": null
+ },
+ {
+  "id": "ball",
+  "word": "공",
+  "emoji": "🏐",
+  "unit": "5-1",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "river",
+  "word": "강",
+  "emoji": "🏞️",
+  "unit": "5-1",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "bread",
+  "word": "빵",
+  "emoji": "🍞",
+  "unit": "5-1",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "dragon",
+  "word": "용",
+  "emoji": "🐉",
+  "unit": "5-1",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "snow",
+  "word": "눈",
+  "emoji": "❄️",
+  "unit": "5-2",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "mountain",
+  "word": "산",
+  "emoji": "⛰️",
+  "unit": "5-2",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "door",
+  "word": "문",
+  "emoji": "🚪",
+  "unit": "5-2",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "hand",
+  "word": "손",
+  "emoji": "✋",
+  "unit": "5-2",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "bear",
+  "word": "곰",
+  "emoji": "🐻",
+  "unit": "5-3",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "island",
+  "word": "섬",
+  "emoji": "🏝️",
+  "unit": "5-3",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "sleep",
+  "word": "잠",
+  "emoji": "😴",
+  "unit": "5-3",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "dance",
+  "word": "춤",
+  "emoji": "💃",
+  "unit": "5-3",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "moon",
+  "word": "달",
+  "emoji": "🌙",
+  "unit": "5-4",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "foot",
+  "word": "발",
+  "emoji": "🦶",
+  "unit": "5-4",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "water",
+  "word": "물",
+  "emoji": "💧",
+  "unit": "5-4",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "horse",
+  "word": "말",
+  "emoji": "🐴",
+  "unit": "5-4",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "star",
+  "word": "별",
+  "emoji": "⭐",
+  "unit": "5-4",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "book",
+  "word": "책",
+  "emoji": "📚",
+  "unit": "5-5",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "medicine",
+  "word": "약",
+  "emoji": "💊",
+  "unit": "5-5",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "soup",
+  "word": "국",
+  "emoji": "🍲",
+  "unit": "5-5",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "ricecake",
+  "word": "떡",
+  "emoji": "🍡",
+  "unit": "5-5",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "rice",
+  "word": "밥",
+  "emoji": "🍚",
+  "unit": "5-6",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "mouth",
+  "word": "입",
+  "emoji": "👄",
+  "unit": "5-6",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "house",
+  "word": "집",
+  "emoji": "🏠",
+  "unit": "5-6",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "cup",
+  "word": "컵",
+  "emoji": "🥤",
+  "unit": "5-6",
+  "stage": 5,
+  "audio": null
+ },
+ {
+  "id": "cookie",
+  "word": "과자",
+  "emoji": "🍪",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "bike",
+  "word": "자전거",
+  "emoji": "🚲",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "turtle",
+  "word": "거북이",
+  "emoji": "🐢",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "tooth",
+  "word": "이빨",
+  "emoji": "🦷",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "butterfly",
+  "word": "나비",
+  "emoji": "🦋",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "giraffe",
+  "word": "기린",
+  "emoji": "🦒",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "sweetpotato",
+  "word": "고구마",
+  "emoji": "🍠",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "mask",
+  "word": "마스크",
+  "emoji": "😷",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "crayon",
+  "word": "크레파스",
+  "emoji": "🖍️",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "ski",
+  "word": "스키",
+  "emoji": "⛷️",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "kiwi",
+  "word": "키위",
+  "emoji": "🥝",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "bag",
+  "word": "가방",
+  "emoji": "🎒",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "scissors",
+  "word": "가위",
+  "emoji": "✂️",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "sea",
+  "word": "바다",
+  "emoji": "🌊",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "cucumber",
+  "word": "오이",
+  "emoji": "🥒",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "tomato",
+  "word": "토마토",
+  "emoji": "🍅",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "tree",
+  "word": "나무",
+  "emoji": "🌳",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "fork",
+  "word": "포크",
+  "emoji": "🍴",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "sun",
+  "word": "해",
+  "emoji": "☀️",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "snowman",
+  "word": "눈사람",
+  "emoji": "⛄",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "song",
+  "word": "노래",
+  "emoji": "🎵",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "acorn",
+  "word": "도토리",
+  "emoji": "🌰",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "pig",
+  "word": "돼지",
+  "emoji": "🐷",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "bridge",
+  "word": "다리",
+  "emoji": "🌉",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "ramen",
+  "word": "라면",
+  "emoji": "🍜",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "robot",
+  "word": "로봇",
+  "emoji": "🤖",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "lemon",
+  "word": "레몬",
+  "emoji": "🍋",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "ribbon",
+  "word": "리본",
+  "emoji": "🎀",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "hat",
+  "word": "모자",
+  "emoji": "🧢",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "rainbow",
+  "word": "무지개",
+  "emoji": "🌈",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "cow",
+  "word": "소",
+  "emoji": "🐮",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "milk",
+  "word": "우유",
+  "emoji": "🥛",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "juice",
+  "word": "주스",
+  "emoji": "🧃",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "earth",
+  "word": "지구",
+  "emoji": "🌍",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "cheese",
+  "word": "치즈",
+  "emoji": "🧀",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "soccer",
+  "word": "축구",
+  "emoji": "⚽",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "toothbrush",
+  "word": "칫솔",
+  "emoji": "🪥",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "cherry",
+  "word": "체리",
+  "emoji": "🍒",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "elephant",
+  "word": "코끼리",
+  "emoji": "🐘",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "cake",
+  "word": "케이크",
+  "emoji": "🍰",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "truck",
+  "word": "트럭",
+  "emoji": "🚚",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "tent",
+  "word": "텐트",
+  "emoji": "⛺",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "pizza",
+  "word": "피자",
+  "emoji": "🍕",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "penguin",
+  "word": "펭귄",
+  "emoji": "🐧",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "hippo",
+  "word": "하마",
+  "emoji": "🦛",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "tiger",
+  "word": "호랑이",
+  "emoji": "🐯",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "cloud",
+  "word": "구름",
+  "emoji": "☁️",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "spider",
+  "word": "거미",
+  "emoji": "🕷️",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "baseball",
+  "word": "야구",
+  "emoji": "⚾",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "palm",
+  "word": "야자수",
+  "emoji": "🌴",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "fox",
+  "word": "여우",
+  "emoji": "🦊",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "yoyo",
+  "word": "요요",
+  "emoji": "🪀",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "cooking",
+  "word": "요리",
+  "emoji": "🍳",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "tangerine",
+  "word": "귤",
+  "emoji": "🍊",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ },
+ {
+  "id": "tissue",
+  "word": "휴지",
+  "emoji": "🧻",
+  "unit": "ex",
+  "stage": null,
+  "audio": null
+ }
 ]

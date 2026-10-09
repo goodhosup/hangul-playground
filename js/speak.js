@@ -25,8 +25,12 @@ const Speak = (() => {
       if (koVoice) u.voice = koVoice;
       u.rate = rate;
       u.pitch = 1.1;
-      u.onend = resolve;
-      u.onerror = resolve;
+      // 일부 기기는 onend가 오지 않아 놀이가 멈출 수 있으므로 시간 제한을 둔다
+      let finished = false;
+      const done = () => { if (!finished) { finished = true; resolve(); } };
+      u.onend = done;
+      u.onerror = done;
+      setTimeout(done, 1200 + text.length * 450 / rate);
       speechSynthesis.speak(u);
     });
   }
